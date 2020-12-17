@@ -1,8 +1,7 @@
 import {
   GET_MY_INFO, GET_MY_INFO_ERROR, GET_MY_INFO_SUCCESS,
 
-  UPDATE_MY_INFO, UPDATE_MY_INFO_SUCCESS, UPDATE_MY_INFO_ERROR,
-  GET_PERMISSION_ERROR, GET_PERMISSION_SUCCESS
+  UPDATE_MY_INFO, UPDATE_MY_INFO_SUCCESS, UPDATE_MY_INFO_ERROR
 } from './constants';
 
 export function loadMyInfo(id) {
@@ -43,20 +42,6 @@ export function updateMyInfoSuccess(dataRes) {
 export function updateMyInfoError(error) {
   return {
     type: UPDATE_MY_INFO_ERROR,
-    error,
-  };
-}
-
-export function permissionSuccess(data) {
-  return {
-    type: GET_PERMISSION_SUCCESS,
-    data,
-  };
-}
-
-export function permissionError(error) {
-  return {
-    type: GET_PERMISSION_ERROR,
     error,
   };
 }

@@ -23,7 +23,6 @@ import saga from './HeaderProvider/saga';
 import injectReducer from '@injectReducer';
 import injectSaga from '@injectSaga';
 import { URL } from '@url';
-import LOGO from '@assets/images/logos/logo.svg';
 const currentTime = Math.floor(Date.now() / 1000);
 
 class HeaderComponent extends Component {
@@ -60,18 +59,13 @@ class HeaderComponent extends Component {
   render() {
     const { myInfoResponse, toggleSider, tinhthanh, quoctich  } = this.props;
     return (
-      <Layout.Header className={`header p-0`}>
+      <Layout.Header className={`header fixed p-0 ${toggleSider ? 'fixed-closed' : 'fixed-open'}`}>
         <div className='left-container d-flex'>
-          {/* <div className="menu__toggle" onClick={() => this.toggle()}>
+          <div className="menu__toggle" onClick={() => this.toggle()}>
             {toggleSider ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
-          </div> */}
-          <a className="brand" href="/">
-            <div className="logo">
-              <img src={LOGO} alt='logo' />
-              <h1>BI Dashboard</h1>
-            </div>
-          </a>
+          </div>
         </div>
+
         <div className='right-container'>
           <Menu key="user" mode="horizontal" selectedKeys={[]}>
             <Menu.SubMenu title={

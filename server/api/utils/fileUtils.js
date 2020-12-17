@@ -4,7 +4,7 @@ import uuidV4 from 'uuid';
 import multipart from 'connect-multiparty';
 import path from 'path';
 import { getConfig } from '../../config/config';
-import request from 'request'
+import request from 'request';
 
 const osTempDir = require('os').tmpdir();
 const tempDir = osTempDir + '/uploads';
@@ -14,9 +14,12 @@ if (!fs.existsSync(tempDir)) {
 }
 
 const config = getConfig(process.env.NODE_ENV);
-const multipartMiddleware = multipart({uploadDir: tempDir});
+const multipartMiddleware = multipart({ uploadDir: tempDir });
+let conf = config.cos.credentials;
+let s3;
+let bucketName = config.cos.bucketName;
 
-const checkTempFolder = (req, res, next)=>{
+const checkTempFolder = (req, res, next) => {
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir);
   }
@@ -51,6 +54,223 @@ const getFileExtension = (filename) => {
   return ext === null ? '' : ext[1];
 };
 
+const checkMainBucket = () => {
+  s3 = new AWS.S3(conf);
+  const bucketParams = {
+    Bucket: bucketName,
+  };
+  return s3.headBucket(bucketParams).promise();
+};
+const createItemObject = (fileName, file) => {
+  const params = {
+    Bucket: bucketName,
+    Key: fileName,
+    ACL: 'public-read',
+    Body: file,
+  };
+  return s3.putObject(params).promise();
+};
+
+const deleteItemObject = (key) => {
+  return s3.deleteObject({
+    Bucket: bucketName,
+    Key: key,
+  }).promise();
+};
+
+const create = (filePath) => {
+  return new Promise((resolve, reject) => {
+    let file = fs.createReadStream(filePath);
+    file.on('error', (err) => {
+      console.log(err);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log('err', err);
+          throw err;
+        }
+      });
+      reject(FILE_MISSING);
+    });
+    checkMainBucket().then(() => {
+      let fileExtension = getFileExtension(filePath);
+      let fileName = fileExtension === '' ? uuidV4() : uuidV4() + '.' + fileExtension;
+      createItemObject(fileName, file).then(() => {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+        resolve(fileName);
+      }).catch(err => {
+        console.log(err);
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+        reject(err);
+      });
+    }).catch(err => {
+      console.log('Bucket is not exists or you dont have permission to access it.');
+      console.log(err);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log('err', err);
+          throw err;
+        }
+      });
+      reject(err);
+    });
+  });
+};
+const createByName = (filePath, fileName, pathOriginal) => {
+  return new Promise((resolve, reject) => {
+    let file = fs.createReadStream(filePath);
+    file.on('error', (err) => {
+      console.log(err);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log('err', err);
+          throw err;
+        }
+      });
+      if (pathOriginal)
+        fs.unlink(pathOriginal, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+      reject('Lỗi');
+    });
+    checkMainBucket().then(() => {
+      createItemObject(fileName, file).then((response) => {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+        if (pathOriginal)
+          fs.unlink(pathOriginal, (err) => {
+            if (err) {
+              console.log('err', err);
+              throw err;
+            }
+          });
+        resolve(fileName);
+      }).catch(err => {
+        console.log(err);
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+        if (pathOriginal)
+          fs.unlink(pathOriginal, (err) => {
+            if (err) {
+              console.log('err', err);
+              throw err;
+            }
+          });
+        reject(err);
+      });
+    }).catch(err => {
+      console.log('Bucket is not exists or you dont have permission to access it.');
+      console.log(err);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log('err', err);
+          throw err;
+        }
+      });
+      if (pathOriginal)
+        fs.unlink(pathOriginal, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+      reject(err);
+    });
+  });
+};
+
+const update = (filePath, fileName) => {
+  return new Promise((resolve, reject) => {
+    let file = fs.createReadStream(filePath);
+    file.on('error', (err) => {
+      console.log(err);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log('err', err);
+          throw err;
+        }
+      });
+      reject('Lỗi');
+    });
+    checkMainBucket().then(async () => {
+      await deleteItemObject(fileName).then(() => {
+        console.log('Delete file: ' + fileName);
+      }).catch(err => {
+        console.log(err);
+      });
+      createItemObject(fileName, file).then(() => {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+        resolve(fileName);
+      }).catch(err => {
+        console.log(err);
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log('err', err);
+            throw err;
+          }
+        });
+        reject(err);
+      });
+    }).catch(err => {
+      console.log('Bucket is not exists or you dont have permission to access it.');
+      console.log(err);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log('err', err);
+          throw err;
+        }
+      });
+      reject(err);
+    });
+  });
+};
+
+const remove = (fileName) => {
+  return new Promise((resolve, reject) => {
+    checkMainBucket().then(() => {
+      deleteItemObject(fileName).then(() => {
+        resolve(fileName);
+      }).catch(err => {
+        console.log(err);
+        reject(err);
+      });
+    }).catch(err => {
+      console.log('Bucket is not exists or you dont have permission to access it.');
+      console.log(err);
+      reject(err);
+    });
+  });
+};
+const getUrlFile = (fileName) => {
+  //console.log(conf.endpoint + '/' + bucketName + '/' + fileName, 'conf.endpoint + \'/\' + bucketName + \'/\' + fileName;')
+  return conf.endpoint + '/' + bucketName + '/' + fileName;
+};
+
 function getFileName(path) {
   let fileName;
   if (path) {
@@ -65,8 +285,8 @@ async function downLoadAndSaveFile(pathUrl, file_name, fileStorage) {
     fs.mkdirSync(tempDir);
   }
 
-  request(pathUrl).pipe(fs.createWriteStream(tempDir + '/' + file_name)).on('close', async function () {
-    await createByName(tempDir + '/' + file_name, fileStorage)
+  request(pathUrl).pipe(fs.createWriteStream(tempDir + '/' + file_name)).on('close', async function() {
+    await createByName(tempDir + '/' + file_name, fileStorage);
   });
 }
 
@@ -90,16 +310,12 @@ function formatFileName(str) {
   return str;
 }
 
-function convertFileName(fileNm) {
-  let extension = path.extname(fileNm);
-  let fileWithoutExtension = formatFileName(path.basename(fileNm, extension));
-  let date_val = new Date();
-  let timestam = date_val.getTime();
-  let fileStorage = fileWithoutExtension + '_' + timestam + extension;
-  return fileStorage
-}
-
 export {
+  create,
+  createByName,
+  update,
+  remove,
+  getUrlFile,
   multipartMiddleware,
   getFileExtension,
   prepareTempFolder,
@@ -107,5 +323,4 @@ export {
   checkTempFolder,
   downLoadAndSaveFile,
   formatFileName,
-  convertFileName
 };

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import BreadcrumbComponent from '../Layout/BreadcrumbComponent';
-// import SiderComponent from '../Layout/SiderComponent/SiderComponent';
+import SiderComponent from '../Layout/SiderComponent/SiderComponent';
 import SwitchComponent from '../Layout/SwitchComponent';
 import HeaderComponent from '../Layout/HeaderComponent/HeaderComponent';
 import reducer from './AppProvider/reducer';
@@ -93,7 +93,7 @@ class App extends Component {
 
     return (
       <Layout theme="dark">
-        {/* isMobile ?
+        {isMobile ?
           <Drawer
             maskClosable
             closable={false}
@@ -106,7 +106,8 @@ class App extends Component {
             <SiderComponent isDrawer history={this.props.history} routersList={routersList}/>
           </Drawer>
           : <SiderComponent history={this.props.history} routersList={routersList}/>
-         */}
+        }
+
         <Layout theme="dark" className="site-layout" id="primaryLayout">
           <HeaderComponent/>
           <div id='content-container' className='custom-scrollbar'>
@@ -114,6 +115,13 @@ class App extends Component {
               <BreadcrumbComponent/>
               <SwitchComponent routersList={routersList}/>
             </Content>
+
+            <BackTop
+              className="back-top"
+              target={() => document.querySelector('#content-container')}
+            >
+            </BackTop>
+
             <Footer className='footer globalFooter' style={{ textAlign: 'center' }}>
               <div className='copyright'>
                 Powered By ThinkLABs JSC

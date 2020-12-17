@@ -310,3 +310,12 @@ label {
 .ant-picker-input > input[disabled], .ant-input[disabled] {
   color: rgba(0, 0, 0, 1) !important;
 }
+.upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+  margin-right: 8px;
+}
+
+.upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
+  float: right;
+}

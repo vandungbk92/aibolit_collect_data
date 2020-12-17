@@ -2,8 +2,7 @@ import { all, call, put, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 import { API } from '@api';
 import { GET_MY_INFO, UPDATE_MY_INFO } from './constants';
-import { myInfoLoaded, myInfoLoadingError, updateMyInfoSuccess, updateMyInfoError,
-  permissionSuccess, permissionError } from './actions';
+import { myInfoLoaded, myInfoLoadingError, updateMyInfoSuccess, updateMyInfoError} from './actions';
 import { getPermissionByUser } from '@commons/functionCommons';
 import { updateById, updateAvatarById } from '@services/userService';
 
@@ -11,18 +10,11 @@ export function* getInfo() {
   const response = yield call(() => axios.get(API.USER_INFO));
   if (response && response.status === 200) {
     let dataUser = response.data;
-
-    let data = getPermissionByUser(dataUser.role, dataUser.permission);
-    delete dataUser.permission
-    /*yield put(permissionSuccess(data))
-    yield put(myInfoLoaded(dataUser))*/
     yield all([
-       put(myInfoLoaded(dataUser)),
-       put(permissionSuccess(data)),
+       put(myInfoLoaded(dataUser))
     ])
   } else {
     yield put(myInfoLoadingError());
-    yield put(permissionError());
   }
 }
 

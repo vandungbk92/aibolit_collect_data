@@ -7,7 +7,7 @@ export function sendEmail(mailOptions) {
     let transporter = nodemailer.createTransport(config.mail);
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error)
+        // console.log(error)
         // callback(error);
       } else {
         // callback(undefined, info);

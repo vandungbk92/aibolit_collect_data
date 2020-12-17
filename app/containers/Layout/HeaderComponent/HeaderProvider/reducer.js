@@ -5,10 +5,6 @@ import {
   GET_MY_INFO,
   GET_MY_INFO_SUCCESS,
   GET_MY_INFO_ERROR,
-  
-  GET_PERMISSION_ERROR,
-  GET_PERMISSION_SUCCESS,
-
   UPDATE_MY_INFO,
   UPDATE_MY_INFO_SUCCESS,
   UPDATE_MY_INFO_ERROR,
@@ -42,18 +38,5 @@ function getDeviceReducer(state = initialState, action) {
       return state;
   }
 }
-
-function getPermissionReducer (state = {}, action) {
-  switch (action.type) {
-    case GET_PERMISSION_SUCCESS:
-      return action.data
-    case GET_PERMISSION_ERROR:
-      return state;
-    default:
-      return state;
-  }
-}
-
-export {getPermissionReducer};
 
 export default getDeviceReducer;

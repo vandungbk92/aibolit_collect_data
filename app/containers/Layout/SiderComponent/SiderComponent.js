@@ -79,7 +79,7 @@ class SiderComponent extends Component {
     const { toggleSider, isDrawer, routersList } = this.props;
     const { pathName, openKeys } = this.state;
     const propsMenu = (!toggleSider || isDrawer) ? { openKeys: [openKeys ? openKeys.toString() : openKeys] } : {};
-    // console.log(pathName,openKeys, propsMenu, 'renderrender')
+
     return (
       <Layout.Sider theme="dark" trigger={null} width={260} collapsible
                     collapsed={isDrawer ? false : toggleSider}>
@@ -87,15 +87,15 @@ class SiderComponent extends Component {
           <div className="brand ">
             <div className="logo">
               <img src={LOGO} alt='' className='logo'/>
-              <h1>Hồ sơ sức khỏe</h1>
+              <h1>Thu thập dữ liệu</h1>
             </div>
           </div>
           <div className='position-relative'>
             <Menu theme="dark" selectedKeys={[pathName]} mode="inline"
                   className='menu-container'
                   {...propsMenu} onOpenChange={this.onOpenChange.bind(this)}>
-              {routersList.filter(route => !route.menuHidden).map((route, index) => {
-                if (route.menuName && !route.children) {
+              {routersList.map((route, index) => {
+                if (route.menuName && (!route.children || route.menuOnly)) {
                   if (route.groupName) {
                     return (
                       <Menu.ItemGroup key={route.path} title={<i>{route.groupName}</i>}>
@@ -116,22 +116,30 @@ class SiderComponent extends Component {
                     return (
                       <Menu.ItemGroup key={index} title={<i>{route.groupName}</i>}>
                         <Menu.SubMenu title={route.menuName} icon={route.icon} key={index}>
-                          {route.children.filter(child => !child.menuHidden).map((child) => (
-                            <Menu.Item key={child.path} icon={child.icon}>
-                              <Link to={child.path}>{child.menuName}</Link>
-                            </Menu.Item>
-                          ))}
+                          {route.children.map((child) => {
+                            if (child.menuName) {
+                              return (
+                                <Menu.Item key={child.path} icon={child.icon}>
+                                  <Link to={child.path}>{child.menuName}</Link>
+                                </Menu.Item>
+                              )
+                            }
+                          })}
                         </Menu.SubMenu>
                       </Menu.ItemGroup>
                     )
                   }
                   return (
                     <Menu.SubMenu key={index} title={route.menuName} icon={route.icon}>
-                      {route.children.filter(child => !child.menuHidden).map((child) => (
-                        <Menu.Item key={child.path} icon={child.icon}>
-                          <Link to={child.path}>{child.menuName}</Link>
-                        </Menu.Item>
-                      ))}
+                      {route.children.map((child) => {
+                        if (child.menuName) {
+                          return (
+                            <Menu.Item key={child.path} icon={child.icon}>
+                              <Link to={child.path}>{child.menuName}</Link>
+                            </Menu.Item>
+                          )
+                        }
+                      })}
                     </Menu.SubMenu>
                   );
                 }
@@ -147,7 +155,6 @@ class SiderComponent extends Component {
 const mapStateToProps = createSelector(
   makeSelectToggleSider(),
   toggleSider => ({ toggleSider }),
-
 );
 
 export default connect(mapStateToProps)(withRouter(SiderComponent));
