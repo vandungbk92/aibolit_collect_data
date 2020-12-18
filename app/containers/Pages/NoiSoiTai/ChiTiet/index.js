@@ -19,7 +19,7 @@ import {
   Checkbox,
   Upload
 } from "antd";
-import { DeleteOutlined, EditOutlined, UploadOutlined, SaveOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, UploadOutlined, SaveOutlined, DownloadOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { add, getById, getAll, delById, updateById } from "@services/noisoitaiService";
 import { getAllQuanHuyenById } from "@services/danhmuc/tinhthanhService";
@@ -35,19 +35,8 @@ import moment from 'moment';
 import produce from "immer";
 import { withDanhMuc } from "@reduxApp/DanhMuc/connect";
 import { compose } from 'redux';
-
-
+import {uploadImages} from "@services/uploadServices";
 const layoutCol = { "xs": 24, "sm": 12, "md": 12, "lg": 12, "xl": 4, "xxl": 4 };
-
-
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-  });
-}
 
 class NoiSoiTai extends Component {
 
@@ -58,17 +47,83 @@ class NoiSoiTai extends Component {
       gioitinh: '',
       quanhuyen: [],
       xaphuong: [],
-      fileList: [],
-      uploading: false,
-      previewVisible: false,
 
+      previewVisible: false,
+      previewImage: '',
+      previewTitle: '',
+      fileListVideo: [{
+        uid: '-1',
+        name: 'Gioi_thieu_CoinVlog_(Video_5s)_1608094757899.mp4',
+        status: 'done',
+        url: 'https://s3.ap.cloud-object-storage.appdomain.cloud/aibolit-collect/Gioi_thieu_CoinVlog_(Video_5s)_1608094757899.mp4',
+      }],
+      fileListKetQua: [{
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      }],
+      fileList: [
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        }
+      ]
     }
     this.formRef = React.createRef();
   }
 
   onFinish = async (values) => {
+    let {fileList, fileListVideo, fileListKetQua} = this.state;
+    let [originFileNm, fileUpload] = this.getfileDetail(fileList)
+    if(fileUpload.length){
+      let files = await uploadImages(fileUpload);
+      if (files && files.length) {
+        originFileNm = [...originFileNm, ...files]
+      }
+    }
+
+    let [originFileNmVideo, fileUploadVideo] = this.getfileDetail(fileListVideo)
+    if(fileUploadVideo.length){
+      let files = await uploadImages(fileUploadVideo);
+      if (files && files.length) {
+        originFileNmVideo = [...originFileNm, ...files]
+      }
+    }
+
+    let [originFileNmKq, fileUploadKq]= this.getfileDetail(fileListKetQua)
+    if(fileUploadKq.length){
+      let files = await uploadImages(fileUploadKq);
+      if (files && files.length) {
+        originFileNmKq = [...originFileNmKq, ...files]
+      }
+    }
+
+    values.hinhanh = originFileNm;
+    values.video = originFileNmVideo;
+    values.hinhanhkq = originFileNmKq;
+    let apiRes = await add(values);
+    if(apiRes){
+      console.log(apiRes, 'apiResapiRes')
+      message.success("Thêm dữ liệu thành công.");
+    }
 
   };
+
+  getfileDetail = (listFile) => {
+    let originFileNm = []
+    let fileUpload = []
+    listFile.filter(data => {
+      if(data.url){
+        originFileNm = [...originFileNm, data.url]
+      }else{
+        fileUpload = [...fileUpload, data.originFileObj]
+      }
+    })
+    return [originFileNm, fileUpload]
+  }
 
   onFieldsChange = async (changedValues, allValues) => {
     if (changedValues.hasOwnProperty('tinhthanh_id')) {
@@ -88,11 +143,9 @@ class NoiSoiTai extends Component {
     }
   }
 
-  handlePreview = async file => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
+  handleCancel = () => this.setState({ previewVisible: false });
 
+  handlePreview = async file => {
     this.setState({
       previewImage: file.url || file.preview,
       previewVisible: true,
@@ -100,48 +153,20 @@ class NoiSoiTai extends Component {
     });
   };
 
+  handleChange = ({ fileList }) => this.setState({ fileList });
+  handleChangeVideo = ({ fileListVideo }) => this.setState({ fileListVideo });
+  handleChangeKq = ({ fileListKetQua }) => this.setState({ fileListKetQua });
+
   render() {
     const { loading, tinhthanh, benh, trieuchung } = this.props;
     const { quanhuyen, xaphuong, fileList } = this.state;
     const { previewVisible, previewImage, previewTitle } = this.state;
 
-    const props = {
-      onRemove: file => {
-        this.setState(state => {
-          const index = state.fileList.indexOf(file);
-          const newFileList = state.fileList.slice();
-          newFileList.splice(index, 1);
-          return {
-            fileList: newFileList,
-          };
-        });
-      },
-      beforeUpload: file => {
-        console.log(file, 'filefilefilefilefile')
-        this.setState(state => ({
-          fileList: [...state.fileList, file],
-        }));
-        return false;
-      },
-      previewFile : async file => {
-        let src = file.url;
-        // console.log(file, 'srcsrcsrcsrcsrc')
-        if (!src) {
-          src = await new Promise(resolve => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-          });
-        }
-        console.log(src, 'srcsrcsrc')
-        return src;
-      },
-      // fileList,
-    };
-    console.log(fileList, 'fileListfileList')
-    return <Box title='Nội soi tai'>
-      <Form ref={this.formRef} layout='vertical' size='small' autoComplete='off' onFinish={this.onFinish}
-            onValuesChange={this.onFieldsChange}>
+    return <Form ref={this.formRef} layout='vertical' size='small' autoComplete='off' onFinish={this.onFinish}
+          onValuesChange={this.onFieldsChange} id="myForm">
+    <Box title='Nội soi tai'
+                boxActions={<Button key="submit" htmlType="submit" form="myForm" icon={<SaveOutlined/>} size='small' type="primary">Lưu dữ liệu</Button>}>
+
         <Row gutter={10}>
           <Col sm={24}>
             <strong>1. Thông tin bệnh nhân</strong>
@@ -154,7 +179,8 @@ class NoiSoiTai extends Component {
           </Col>
 
           <Col {...layoutCol}>
-            <Form.Item label="Tuổi" name="tuoi">
+            <Form.Item label="Tuổi" name="tuoi" validateTrigger={['onChange', 'onBlur']}
+                       rules={[{ required: true, whitespace: true, message: 'Tuổi là bắt buộc nhập' }]}>
               <InputNumber placeholder='Tuổi' disabled={loading}/>
             </Form.Item>
           </Col>
@@ -237,14 +263,44 @@ class NoiSoiTai extends Component {
             </Form.Item>
           </Col>
           <Col xs={24} xxl={24}>
-            <Form.Item label="Hình ảnh" name="hinhanh" className="text-center">
-              <Upload {...props}
+            <Form.Item label="Hình ảnh" name="hinhanh" className="">
+              <Upload
+                action={false}
                 accept="image/*"
+                listType="picture-card"
+                fileList={fileList}
                 multiple={true}
-                listType="picture"
-                // fileList={fileList}
-                className="upload-list-inline"
-                // showUploadList={true}
+                onPreview={this.handlePreview}
+                onChange={this.handleChange}
+                beforeUpload={file => {return false}}
+                showUploadList={{
+                  showPreviewIcon: true,
+                  showDownloadIcon: true,
+                  showRemoveIcon: true,
+                  downloadIcon: (file) => <a download href={file.url}><DownloadOutlined /></a>
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+
+          <Col xs={24} xxl={24}>
+            <Form.Item label="Video" name="video" className="">
+
+
+              <Upload
+                action={false}
+                accept="video/*, audio/*"
+                onChange={this.handleChangeVideo}
+                fileList={this.state.fileListVideo}
+                beforeUpload={file => {return false}}
+                showUploadList={{
+                  // showPreviewIcon: false,
+                  showDownloadIcon: true,
+                  showRemoveIcon: true,
+                  downloadIcon: (file) => <a download href={file.url}><DownloadOutlined /></a>
+                }}
               >
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
@@ -274,17 +330,39 @@ class NoiSoiTai extends Component {
               </Form.Item>
             </Col>
           </Col>
+          <Col xs={24} xxl={24}>
+            <Form.Item label="Hình ảnh kết quả" name="hinhanh" className="">
+              <Upload
+                action={false}
+                accept="image/*"
+                listType="picture-card"
+                fileList={this.state.fileListKetQua}
+                multiple={true}
+                onPreview={this.handlePreview}
+                onChange={this.handleChangeKq}
+                beforeUpload={file => {return false}}
+                showUploadList={{
+                  showPreviewIcon: true,
+                  showDownloadIcon: true,
+                  showRemoveIcon: true,
+                  downloadIcon: (file) => <a download href={file.url}><DownloadOutlined /></a>
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
+            </Form.Item>
+          </Col>
 
 
 
         </Row>
-      </Form>
+
 
       <Modal
         visible={previewVisible}
         title={previewTitle}
         footer={null}
-        onCancel={() => {}}
+        onCancel={this.handleCancel}
       >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
@@ -295,6 +373,7 @@ class NoiSoiTai extends Component {
 
 
     </Box>
+    </Form>
   }
 }
 

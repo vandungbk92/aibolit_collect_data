@@ -319,3 +319,7 @@ label {
 .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
   float: right;
 }
+
+.ant-upload-list-picture-card .ant-upload-list-item-info::before{
+  left: 0;
+}

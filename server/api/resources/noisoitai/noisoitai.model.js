@@ -34,12 +34,13 @@ const noisoitaiSchema = new Schema({
   }],
   lydokham: {type: String},
 
-  images: [],
-  files: [],
+  hinhanh: [],
+  video: [],
 
   ketluan: {
     type: String
   },
+  hinhanhkq: [],
   benh: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Benh',
