@@ -8,6 +8,9 @@ import { imgUploadRouter } from './api/resources/imgUpload/imgUpload.router';
 import { trieuchungRouter } from './api/resources/danhmuc/trieuchung/trieuchung.router';
 import { benhRouter } from './api/resources/danhmuc/benh/benh.router';
 import { noisoitaiRouter } from './api/resources/noisoitai/noisoitai.router';
+import { nghephoiRouter } from './api/resources/nghephoi/nghephoi.router';
+import { noisoihongRouter } from './api/resources/noisoihong/noisoihong.router';
+import { soidaRouter } from './api/resources/soida/soida.router';
 
 const router = express.Router();
 router.use("/users", userRouter);
@@ -18,5 +21,8 @@ router.use('/files', imgUploadRouter);
 router.use('/trieu-chung', trieuchungRouter);
 router.use('/benh', benhRouter);
 router.use('/noi-soi-tai', noisoitaiRouter);
+router.use('/nghe-phoi', nghephoiRouter);
+router.use('/noi-soi-hong', noisoihongRouter);
+router.use('/soi-da', soidaRouter);
 
 module.exports = router;

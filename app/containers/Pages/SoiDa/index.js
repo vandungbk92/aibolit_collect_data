@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Input, Button, Form, Table, Popconfirm, message, Card, Tooltip } from "antd";
 import { DeleteOutlined, PrinterOutlined, PlusOutlined, UnorderedListOutlined, EyeOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { add, getById, getAll, delById, updateById } from '@services/noisoitaiService';
+import { add, getById, getAll, delById, updateById } from '@services/soidaService';
 import { PAGINATION_CONFIG } from '@constants';
 import { createStructuredSelector } from 'reselect';
 import { makeGetLoading } from '@containers/App/AppProvider/selectors';
@@ -15,7 +15,7 @@ import {dateFormatter} from '@commons/dateFormat';
 import { withDanhMuc } from "@reduxApp/DanhMuc/connect";
 import { compose } from 'redux';
 
-class NoiSoiTai extends Component {
+class SoiDa extends Component {
 
   columns = [
     {
@@ -141,7 +141,7 @@ class NoiSoiTai extends Component {
   }
   formatActionCell(value) {
     return <>
-      <Link to={URL.NOI_SOI_TAI_ID.format(value._id)}>
+      <Link to={URL.SOI_DA_ID.format(value._id)}>
         <Tooltip title={'Xem chi tiết'} color="#2db7f5">
           <Button icon={<EyeOutlined/>} size='small' type="primary" className='mr-1'></Button>
         </Tooltip>
@@ -201,7 +201,7 @@ class NoiSoiTai extends Component {
 
       <Card size="small" title={<span>
         <UnorderedListOutlined className="icon-card-header"/> &nbsp;Danh sách khám định kỳ
-      </span>} md="24" bordered extra={<Link to={URL.NOI_SOI_TAI_ADD}>
+      </span>} md="24" bordered extra={<Link to={URL.SOI_DA_ADD}>
         <Button type="primary" className='pull-right' size="small" icon={<PlusOutlined/>}>Thêm</Button>
       </Link>}>
         <Search onFilterChange={this.handleRefresh} dataSearch={dataSearch}/>
@@ -225,6 +225,6 @@ const mapStateToProps = createStructuredSelector({
 
 
 const withConnect = connect(mapStateToProps);
-export default compose(withConnect)(NoiSoiTai);
+export default compose(withConnect)(SoiDa);
 
 

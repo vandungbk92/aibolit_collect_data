@@ -21,7 +21,7 @@ import {
 } from "antd";
 import { DeleteOutlined, EditOutlined, UploadOutlined, SaveOutlined, DownloadOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { add, getById, getAll, delById, updateById } from "@services/noisoitaiService";
+import { add, getById, getAll, delById, updateById } from "@services/noisoihongService";
 import { getAllQuanHuyenById } from "@services/danhmuc/tinhthanhService";
 import { getAllPhuongXaById } from "@services/danhmuc/quanhuyenService";
 import { CONSTANTS, GENDER_OPTIONS, PAGINATION_CONFIG } from "@constants";
@@ -38,7 +38,7 @@ import { compose } from 'redux';
 import {uploadImages} from "@services/uploadServices";
 const layoutCol = { "xs": 24, "sm": 12, "md": 12, "lg": 12, "xl": 4, "xxl": 4 };
 
-class NoiSoiTai extends Component {
+class NoiSoiHong extends Component {
 
   constructor(props) {
     super(props);
@@ -447,6 +447,6 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps);
 
-export default compose(withConnect, withDanhMuc)(NoiSoiTai);
+export default compose(withConnect, withDanhMuc)(NoiSoiHong);
 
 

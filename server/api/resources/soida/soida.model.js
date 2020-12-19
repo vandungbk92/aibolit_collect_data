@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 const {Schema} = mongoose;
-const noisoitaiSchema = new Schema({
+const soidaSchema = new Schema({
   makham: {
     type: String
   },
@@ -52,5 +52,5 @@ const noisoitaiSchema = new Schema({
     updatedAt: 'updated_at',
   }
 });
-noisoitaiSchema.plugin(mongoosePaginate);
-export default mongoose.model('NoiSoiTai', noisoitaiSchema);
+soidaSchema.plugin(mongoosePaginate);
+export default mongoose.model('SoiDa', soidaSchema);

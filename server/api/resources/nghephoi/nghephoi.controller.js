@@ -1,4 +1,4 @@
-import NoiSoiTai from './noisoitai.model';
+import NghePhoi from './nghephoi.model';
 import * as responseAction from '../../utils/responseAction'
 import {filterRequest, optionsRequest} from '../../utils/filterRequest'
 
@@ -10,7 +10,7 @@ export default {
       let dateFormat = new Date();
       let yyyymmdd = `${dateFormat.getFullYear()}${('0' + (dateFormat.getMonth() + 1)).slice(-2)}${('0' + dateFormat.getDate()).slice(-2)}`;
       let filterDate = `^${yyyymmdd}`
-      let dataCheck = await NoiSoiTai.findOne({
+      let dataCheck = await NghePhoi.findOne({
         makham: new RegExp(filterDate)
       }).sort({makham: -1})
 
@@ -20,7 +20,7 @@ export default {
       }
       req.body.makham = makham
 
-      const data = await NoiSoiTai.create(req.body);
+      const data = await NghePhoi.create(req.body);
       let dataRtn = await data.populate({path: 'tinhthanh_id', select: 'tentinh'})
         .populate({path: 'quanhuyen_id', select: 'tenqh'})
         .populate({path: 'phuongxa_id', select: 'tenphuongxa'})
@@ -46,7 +46,7 @@ export default {
         {path: 'trieuchung_id', select: 'trieuchung'},
         {path: 'benh_id', select: 'benh'}
       ]
-      const data = await NoiSoiTai.paginate(query, options)
+      const data = await NghePhoi.paginate(query, options)
       return res.json(data);
     } catch (err) {
       console.error(err);
@@ -58,7 +58,7 @@ export default {
   async findOne(req, res) {
     try {
       const { id } = req.params;
-      const data = await NoiSoiTai.findOne({is_deleted: false, _id: id})
+      const data = await NghePhoi.findOne({is_deleted: false, _id: id})
         .populate({path: 'tinhthanh_id', select: 'tentinh'})
         .populate({path: 'quanhuyen_id', select: 'tenqh'})
         .populate({path: 'phuongxa_id', select: 'tenphuongxa'})
@@ -76,7 +76,7 @@ export default {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      const data = await NoiSoiTai.findOneAndUpdate({ _id: id }, {is_deleted: true}, { new: true });
+      const data = await NghePhoi.findOneAndUpdate({ _id: id }, {is_deleted: true}, { new: true });
       if (!data) {
           responseAction.error(res, 404, '')
       }
@@ -89,7 +89,7 @@ export default {
   async update(req, res) {
     try {
       const { id } = req.params;
-      const data = await NoiSoiTai.findOneAndUpdate({ _id: id }, req.body, { new: true })
+      const data = await NghePhoi.findOneAndUpdate({ _id: id }, req.body, { new: true })
         .populate({path: 'tinhthanh_id', select: 'tentinh'})
         .populate({path: 'quanhuyen_id', select: 'tenqh'})
         .populate({path: 'phuongxa_id', select: 'tenphuongxa'})

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 const {Schema} = mongoose;
-const noisoitaiSchema = new Schema({
+const nghephoiSchema = new Schema({
   makham: {
     type: String
   },
@@ -52,5 +52,5 @@ const noisoitaiSchema = new Schema({
     updatedAt: 'updated_at',
   }
 });
-noisoitaiSchema.plugin(mongoosePaginate);
-export default mongoose.model('NoiSoiTai', noisoitaiSchema);
+nghephoiSchema.plugin(mongoosePaginate);
+export default mongoose.model('NghePhoi', nghephoiSchema);

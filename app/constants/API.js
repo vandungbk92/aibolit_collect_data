@@ -32,6 +32,18 @@ export const API = {
   BENH_QUERY: '/api/benh?page={0}&limit={1}{2}',
   BENH_ID: '/api/benh/{0}',
 
+  NOI_SOI_HONG: '/api/noi-soi-hong',
+  NOI_SOI_HONG_QUERY: '/api/noi-soi-hong?page={0}&limit={1}{2}',
+  NOI_SOI_HONG_ID: '/api/noi-soi-hong/{0}',
+
+  SOI_DA: '/api/soi-da',
+  SOI_DA_QUERY: '/api/soi-da?page={0}&limit={1}{2}',
+  SOI_DA_ID: '/api/soi-da/{0}',
+
+  NGHE_PHOI: '/api/nghe-phoi',
+  NGHE_PHOI_QUERY: '/api/nghe-phoi?page={0}&limit={1}{2}',
+  NGHE_PHOI_ID: '/api/nghe-phoi/{0}',
+
   NOI_SOI_TAI: '/api/noi-soi-tai',
   NOI_SOI_TAI_QUERY: '/api/noi-soi-tai?page={0}&limit={1}{2}',
   NOI_SOI_TAI_ID: '/api/noi-soi-tai/{0}',

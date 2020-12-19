@@ -310,6 +310,10 @@ function formatFileName(str) {
   return str;
 }
 
+function getMaSo(){
+
+}
+
 export {
   create,
   createByName,

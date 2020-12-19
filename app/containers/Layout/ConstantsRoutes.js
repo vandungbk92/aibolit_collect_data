@@ -30,8 +30,18 @@ import PhuongXa from '@containers/Pages/DanhMuc/PhuongXa/Loadable';
 import TaiKhoan from '@containers/Pages/TaiKhoan/Loadable';
 import TrieuTrung from '@containers/Pages/DanhMuc/TrieuTrung/Loadable';
 import Benh from '@containers/Pages/DanhMuc/Benh/Loadable';
+
 import NoiSoiTai from '@containers/Pages/NoiSoiTai/Loadable';
 import NoiSoiTaiChiTiet from '@containers/Pages/NoiSoiTai/ChiTiet/Loadable';
+
+import NghePhoi from '@containers/Pages/NghePhoi/Loadable';
+import NghePhoiChiTiet from '@containers/Pages/NghePhoi/ChiTiet/Loadable';
+
+import NoiSoiHong from '@containers/Pages/NoiSoiHong/Loadable';
+import NoiSoiHongChiTiet from '@containers/Pages/NoiSoiHong/ChiTiet/Loadable';
+
+import SoiDa from '@containers/Pages/SoiDa/Loadable';
+import SoiDaChiTiet from '@containers/Pages/SoiDa/ChiTiet/Loadable';
 
 function renderMenuIcon(icon) {
   return (
@@ -61,6 +71,8 @@ const constantsRoutes = [
     component: NotFoundPage,
     role: []
   },
+
+  //tai
   {
     path: '/noi-soi-tai',
     menuName: 'Nội soi tai',
@@ -79,11 +91,85 @@ const constantsRoutes = [
   {
     path: '/noi-soi-tai/:id',
     component: NoiSoiTaiChiTiet,
-    breadcrumbName: 'Thêm dữ liệu',
+    // breadcrumbName: 'Thêm dữ liệu',
     icon: <WeiboCircleOutlined/>,
     exact: true,
     role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
   },
+
+  //họng
+  {
+    path: '/noi-soi-hong',
+    menuName: 'Nội soi họng',
+    component: NoiSoiHong,
+    icon: <MedicineBoxOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  {
+    path: '/noi-soi-hong/add',
+    component: NoiSoiHongChiTiet,
+    icon: <MedicineBoxOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  {
+    path: '/noi-soi-hong/:id',
+    component: NoiSoiHongChiTiet,
+    // breadcrumbName: 'Thêm dữ liệu',
+    icon: <MedicineBoxOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  // da
+  {
+    path: '/soi-da',
+    menuName: 'Soi da',
+    component: SoiDa,
+    icon: <OneToOneOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  {
+    path: '/soi-da/add',
+    component: SoiDaChiTiet,
+    icon: <OneToOneOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  {
+    path: '/soi-da/:id',
+    component: SoiDaChiTiet,
+    // breadcrumbName: 'Thêm dữ liệu',
+    icon: <OneToOneOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  // nghe phổi
+  {
+    path: '/nghe-phoi',
+    menuName: 'Nghe phổi',
+    component: NghePhoi,
+    icon: <CloudSyncOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  {
+    path: '/nghe-phoi/add',
+    component: NghePhoiChiTiet,
+    icon: <CloudSyncOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+  {
+    path: '/nghe-phoi/:id',
+    component: NghePhoiChiTiet,
+    // breadcrumbName: 'Thêm dữ liệu',
+    icon: <CloudSyncOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+
   {
     path: URL.TAI_KHOAN,
     menuName: 'Quản lý tài khoản',
