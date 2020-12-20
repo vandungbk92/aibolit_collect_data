@@ -27,6 +27,10 @@ const noisoitaiSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PhuongXa',
   },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 
   trieuchung_id: [{
     type: mongoose.Schema.Types.ObjectId,

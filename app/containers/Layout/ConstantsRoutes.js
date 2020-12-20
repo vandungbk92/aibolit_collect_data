@@ -184,13 +184,13 @@ const constantsRoutes = [
     menuName: 'Danh mục chung',
     icon: <InsertRowLeftOutlined/>,
     children: [
-      { path: URL.TRIEU_CHUNG, menuName: 'Triệu chứng', component: TrieuTrung, role: [CONSTANTS.ADMIN] },
-      { path: URL.BENH, menuName: 'Bệnh', component: Benh, role: [CONSTANTS.ADMIN] },
+      { path: URL.TRIEU_CHUNG, menuName: 'Triệu chứng', component: TrieuTrung, role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE] },
+      { path: URL.BENH, menuName: 'Bệnh', component: Benh, role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE] },
       { path: URL.TINH_THANH, menuName: 'Tỉnh thành', component: TinhThanh, role: [CONSTANTS.ADMIN] },
       { path: URL.QUAN_HUYEN, menuName: 'Quận huyện', component: QuanHuyen, role: [CONSTANTS.ADMIN] },
       { path: URL.PHUONG_XA, menuName: 'Phường xã', component: PhuongXa, role: [CONSTANTS.ADMIN] },
     ],
-    role: [CONSTANTS.ADMIN]
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
   },
 ];
 

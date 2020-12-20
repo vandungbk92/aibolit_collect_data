@@ -127,7 +127,7 @@ class SoiDa extends Component {
   onFinish = async (values) => {
 
     let {fileList, fileListVideo, fileListKetQua} = this.state;
-    console.log(fileList, fileListVideo, fileListKetQua, 'fileList, fileListVideo, fileListKetQua')
+    // console.log(fileList, fileListVideo, fileListKetQua, 'fileList, fileListVideo, fileListKetQua')
     let [originFileNm, fileUpload] = this.getfileDetail(fileList)
     if(fileUpload.length){
       let files = await uploadImages(fileUpload);
@@ -140,7 +140,7 @@ class SoiDa extends Component {
     if(fileUploadVideo.length){
       let files = await uploadImages(fileUploadVideo);
       if (files && files.length) {
-        originFileNmVideo = [...originFileNm, ...files]
+        originFileNmVideo = [...originFileNmVideo, ...files]
       }
     }
 
@@ -176,7 +176,7 @@ class SoiDa extends Component {
   };
 
   getfileDetail = (listFile) => {
-    console.log(listFile, 'listFilelistFilelistFile')
+    // console.log(listFile, 'listFilelistFilelistFile')
     let originFileNm = []
     let fileUpload = []
     listFile.filter(data => {

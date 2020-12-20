@@ -19,6 +19,7 @@ export default {
         makham = parseInt(dataCheck.makham) + 1
       }
       req.body.makham = makham
+      req.body.user_id = req.user._id
 
       const data = await NoiSoiHong.create(req.body);
       let dataRtn = await data.populate({path: 'tinhthanh_id', select: 'tentinh'})
@@ -34,7 +35,9 @@ export default {
   async findAll(req, res) {
     try {
       let query = filterRequest(req.query, true)
-
+      if(req.user.role === 'QUAN_LY'){
+        query.user_id = req.user._id
+      }
       let options = optionsRequest(req.query)
       if(req.query.limit && req.query.limit === '0'){
         options.pagination = false;

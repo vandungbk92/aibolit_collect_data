@@ -45,6 +45,10 @@ const noisoihongSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Benh',
   }],
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   is_deleted: {type: Boolean, default: false}
 }, {
   timestamps: {

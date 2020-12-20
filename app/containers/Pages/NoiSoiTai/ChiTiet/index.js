@@ -140,7 +140,7 @@ class NoiSoiTai extends Component {
     if(fileUploadVideo.length){
       let files = await uploadImages(fileUploadVideo);
       if (files && files.length) {
-        originFileNmVideo = [...originFileNm, ...files]
+        originFileNmVideo = [...originFileNmVideo, ...files]
       }
     }
 

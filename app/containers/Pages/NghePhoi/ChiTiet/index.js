@@ -127,7 +127,7 @@ class NghePhoi extends Component {
   onFinish = async (values) => {
 
     let {fileList, fileListVideo, fileListKetQua} = this.state;
-    console.log(fileList, fileListVideo, fileListKetQua, 'fileList, fileListVideo, fileListKetQua')
+    // console.log(fileList, fileListVideo, fileListKetQua, 'fileList, fileListVideo, fileListKetQua')
     let [originFileNm, fileUpload] = this.getfileDetail(fileList)
     if(fileUpload.length){
       let files = await uploadImages(fileUpload);
@@ -140,7 +140,7 @@ class NghePhoi extends Component {
     if(fileUploadVideo.length){
       let files = await uploadImages(fileUploadVideo);
       if (files && files.length) {
-        originFileNmVideo = [...originFileNm, ...files]
+        originFileNmVideo = [...originFileNmVideo, ...files]
       }
     }
 
