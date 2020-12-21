@@ -15,7 +15,7 @@
     "start:server": "babel-node server",
     "start": "cross-env NODE_ENV=development babel-watch server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true babel-watch server",
-    "start:production": "npm run build && npm run buildServer && npm run start:prod",
+    "prod": "npm run build && npm run buildServer && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node build/server",
     "presetup": "npm i chalk shelljs",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
