@@ -1,4 +1,4 @@
-const DEFAULT_DB_URI = "mongodb://ibm_cloud_432cb539_547b_4c76_ad4d_22bd3493fa97:583415dc2b5376f4d14e9bec7a30594d594e74266ab79c7dbfa9a18ffca75562@e663620c-4d0a-40d6-ac7c-5af6e621a7d8-1.22868e325a8b40b6840ed9895f3bb023.databases.appdomain.cloud:32472/aibolit?authSource=admin&ssl=true&replicaSet=replset";
+const DEFAULT_DB_URI = "mongodb://root:thinK36lAbs@161.202.27.51:27017/thuthapdulieu?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false";
 const config = {
   production: {
     secret: 'AIBOLIT',

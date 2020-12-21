@@ -1,5 +1,5 @@
 /* eslint consistent-return:0 import/order:0 */
-
+import '@babel/polyfill';
 import express from 'express';
 import path from 'path';
 import passport from 'passport';
@@ -15,10 +15,10 @@ import { connect } from './config/db';
 import { configJWTStrategy } from './api/middlewares/passport-jwt';
 
 const isDev = process.env.NODE_ENV !== 'production';
-const ngrok =
+/*const ngrok =
   (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel
     ? require('ngrok')
-    : false;
+    : false;*/
 
 connect();
 
@@ -55,9 +55,10 @@ app.listen(port, host, async err => {
   if (err) {
     return logger.error(err.message);
   }
-
+  logger.appStarted(port, prettyHost);
   // Connect to ngrok in dev mode
-  if (ngrok) {
+
+  /*if (ngrok) {
     let url;
     try {
       url = await ngrok.connect(port);
@@ -67,5 +68,5 @@ app.listen(port, host, async err => {
     logger.appStarted(port, prettyHost, url);
   } else {
     logger.appStarted(port, prettyHost);
-  }
+  }*/
 });

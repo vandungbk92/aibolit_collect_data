@@ -12,13 +12,15 @@
     "prebuild": "npm run build:clean",
     "build": "cross-env NODE_ENV=production webpack --config webpack/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:clean": "rimraf ./build",
+    "start:server": "babel-node server",
     "start": "cross-env NODE_ENV=development babel-watch server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true babel-watch server",
-    "start:production": "npm run build && npm run start:prod",
-    "start:prod": "cross-env NODE_ENV=production node server",
+    "start:production": "npm run build && npm run buildServer && npm run start:prod",
+    "start:prod": "cross-env NODE_ENV=production node build/server",
     "presetup": "npm i chalk shelljs",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prettify": "prettier --write"
+    "prettify": "prettier --write",
+    "buildServer": "rimraf ./build/server && babel server -s -d build/server"
   },
   "browserslist": [
     "last 2 versions",
