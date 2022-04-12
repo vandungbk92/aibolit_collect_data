@@ -33,7 +33,7 @@ const config = {
   },
   development: {
     secret: 'AIBOLIT',
-    MONGO_URI: 'mongodb://root:thinK36lAbs@161.202.27.51:27017/thuthapdulieu?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false',
+    MONGO_URI: 'mongodb://thuthapdulieu:thuthapdulieu@118.70.156.51:4014/thuthapdulieu?authSource=thuthapdulieu',
     port: 27017,
     "cos": {
       "credentials": {
