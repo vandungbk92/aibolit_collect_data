@@ -310,10 +310,6 @@ function formatFileName(str) {
   return str;
 }
 
-function getMaSo(){
-
-}
-
 export {
   create,
   createByName,
@@ -326,5 +322,5 @@ export {
   getFileName,
   checkTempFolder,
   downLoadAndSaveFile,
-  formatFileName,
+  formatFileName
 };
