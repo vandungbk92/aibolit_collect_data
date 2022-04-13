@@ -3,10 +3,10 @@ RUN apk add --update --no-cache autoconf libtool automake nasm gcc make g++ zlib
 
 WORKDIR /app
 COPY package.json .
-RUN yarn install
+RUN npm install
 COPY . .
-RUN yarn run build
-RUN yarn run buildServer
+RUN npm run build
+RUN npm run buildServer
 
 EXPOSE 8080
 CMD [ "npm", "run", "prod" ]

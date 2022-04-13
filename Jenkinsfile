@@ -32,7 +32,7 @@ pipeline {
                                 remoteDirectory: './thinklabsdev/aibolitdataCI',
                                 remoteDirectorySDF: false,
                                 removePrefix: '',
-                                sourceFiles: '*, app/, public/, server/, webpack/, uploads/'
+                                sourceFiles: '*, app/, build/, server/, webpack/, upload'
                             )],
                         usePromotionTimestamp: false,
                         useWorkspaceInPromotion: false,
