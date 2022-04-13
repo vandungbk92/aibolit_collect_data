@@ -19,7 +19,7 @@ services:
         published: 8035
         mode: host
     volumes:
-      - upload:/app/upload
+      - uploads:/usr/src/app/uploads
 
 volumes:
   upload:

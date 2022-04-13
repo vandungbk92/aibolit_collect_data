@@ -1,16 +1,12 @@
-FROM ubuntu:18.04
+FROM node:12.19.1-alpine3.10 as build-step
+RUN apk add --update --no-cache autoconf libtool automake nasm gcc make g++ zlib-dev
 
-RUN apt-get update \
- && apt-get install -y curl \
- && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
- && apt-get install -y nodejs
-
-WORKDIR /app
+WORKDIR /usr/src/app
 COPY package.json .
-RUN npm install
+RUN yarn install
 COPY . .
-RUN npm run build
-RUN npm run buildServer
+RUN yarn run build
+RUN yarn run buildServer
 
 EXPOSE 8080
 CMD [ "npm", "run", "prod" ]
