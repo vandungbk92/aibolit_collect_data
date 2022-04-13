@@ -1,18 +1,12 @@
-FROM ubuntu:18.04
+FROM node:14-alpine3.10 as build-step
+RUN apk add --update --no-cache autoconf libtool automake nasm gcc make g++ zlib-dev
 
-RUN apt-get update \
- && apt-get install -y curl \
- && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
- && apt-get install -y nodejs \
- && apt-get install -y nginx
-
-WORKDIR /usr/src/app
+WORKDIR /app
+COPY package.json .
+RUN yarn install
 COPY . .
-RUN npm install
-RUN npm run build
-RUN cp -rf ./public/reportDesign ./build/
-RUN cp -rf ./public/stimulsoft ./build/
-RUN cp ./nginx-cf/nginx.conf /etc/nginx/
-CMD ["nginx", "-g", "daemon off;"]
+RUN yarn run build
+RUN yarn run buildServer
 
-EXPOSE 80
+EXPOSE 8080
+CMD [ "npm", "run", "prod" ]
