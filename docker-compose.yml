@@ -19,8 +19,8 @@ services:
         published: 8035
         mode: host
     volumes:
-      - uploads:/usr/src/app/uploads
+      - uploads:/app/uploads
 
 volumes:
-  upload:
+  uploads:
     driver: lizardfs

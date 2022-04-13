@@ -1,7 +1,7 @@
-FROM node:12.19.1-alpine3.10 as build-step
+FROM node:14-alpine3.10
 RUN apk add --update --no-cache autoconf libtool automake nasm gcc make g++ zlib-dev
 
-WORKDIR /usr/src/app
+WORKDIR /app
 COPY package.json .
 RUN yarn install
 COPY . .
