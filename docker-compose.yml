@@ -1,0 +1,26 @@
+version: "3.2"
+services:
+  web:
+    image: "registry.thinklabs.com.vn:5000/aibolitdata:latest"
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.environment==development]
+      restart_policy:
+        condition: any
+    environment:
+      PORT: 8080
+      NODE_ENV: "production"
+      SERVICE_8080_NAME: "aibolitdata"
+      SERVICE_NAME: "aibolitdata"
+      SERVICE_TAGS: "aibolitdata"
+    ports:
+      - target: 8080
+        published: 8035
+        mode: host
+    volumes:
+      - upload:/app/upload
+
+volumes:
+  upload:
+    driver: lizardfs
