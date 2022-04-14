@@ -1,4 +1,4 @@
-const DEFAULT_DB_URI = "mongodb://root:thinK36lAbs@161.202.27.51:27017/thuthapdulieu?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false";
+const DEFAULT_DB_URI = "mongodb://thuthapdulieu:thuthapdulieu@118.70.156.51:4014/thuthapdulieu?authSource=thuthapdulieu";
 const config = {
   production: {
     secret: 'AIBOLIT',
