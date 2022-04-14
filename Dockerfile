@@ -9,4 +9,6 @@ RUN yarn run build
 RUN yarn run buildServer
 
 EXPOSE 8080
+CMD [ "ls"]
+CMD [ "tree build"]
 CMD [ "npm", "run", "prod" ]
