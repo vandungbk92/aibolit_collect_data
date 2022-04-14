@@ -18,7 +18,7 @@
     "prod": "npm run build && npm run buildServer && npm run check && npm run checkbuild && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node build/server",
     "check": "ls",
-    "checkbuild": "tree build",
+    "checkbuild": "ls build && ls build/server",
     "presetup": "npm i chalk shelljs",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "prettify": "prettier --write",
