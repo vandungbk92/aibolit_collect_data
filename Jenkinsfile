@@ -4,6 +4,7 @@ pipeline {
         stage('Init') {
             steps {
                 echo 'Testing..'
+                telegramSend(message: 'Building job: $PROJECT_NAME ... - Link: $BUILD_URL', chatId: -740504133)
             }
         }
         stage ('Deployments') {
@@ -38,6 +39,7 @@ pipeline {
                         verbose: false
                     )
                 ])
+                telegramSend(message: 'Build - $PROJECT_NAME – # $BUILD_NUMBER – STATUS: $BUILD_STATUS!', chatId: -740504133)
             }
         }
     }
