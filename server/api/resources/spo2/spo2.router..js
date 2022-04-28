@@ -5,7 +5,7 @@ import spo2Controller from './spo2.controller';
 export const SpO2Router = express.Router();
 SpO2Router
   .route('/')
-  .get(spo2Controller.getAll)
+  .get(spo2Controller.getAllDates)
   .post(spo2Controller.create);
 
 SpO2Router
