@@ -32,7 +32,6 @@ export default {
         .catch(err => {
           console.log(err, '1');
         }); */
-      console.log(a, 'aa')
       return res.status(200).send({ success: true, image_id: uri });
     } catch (err) {
       console.error(err);

@@ -15,6 +15,10 @@ const SpO2Schema = new Schema({
   perfussionIndex: {
     type: Number,
     required: true
+  },
+  time: {
+    type: Date,
+    required: true
   }
 }, {
   timestamps: {
