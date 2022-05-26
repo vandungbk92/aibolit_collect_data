@@ -25,15 +25,17 @@ export function formatYMDFromDate(momentDate) {
   return `${dateFormat.getFullYear()}${('0' + (dateFormat.getMonth() + 1)).slice(-2)}${('0' + dateFormat.getDate()).slice(-2)}`;
 }
 
-export function dateFormatterFromDate(dateFormat) {
-  return `${('0' + dateFormat.getDate()).slice(-2)}/${('0' + (dateFormat.getMonth() + 1)).slice(-2)}/${dateFormat.getFullYear()}`;
-}
+export function dateFormatterFromDate(totalSeconds) {
+  let str = ''
+  let hours = Math.floor(totalSeconds / 3600);
 
-export function dateFormatter(stringDate) {
-  if (stringDate) {
-    let dateFormat = new Date(stringDate);
-    return `${('0' + dateFormat.getDate()).slice(-2)}/${('0' + (dateFormat.getMonth() + 1)).slice(-2)}/${dateFormat.getFullYear()}`;
-  } else {
-    return '';
-  }
+  if(hours > 0) str += hours + ' giờ '
+  totalSeconds %= 3600;
+
+  let minutes = Math.floor(totalSeconds / 60);
+  if(minutes > 0) str += minutes + ' phút '
+
+  let seconds = totalSeconds % 60;
+  str += seconds + ' giây'
+  return str
 }

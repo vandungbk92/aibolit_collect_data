@@ -47,4 +47,8 @@ export const API = {
   NOI_SOI_TAI: '/api/noi-soi-tai',
   NOI_SOI_TAI_QUERY: '/api/noi-soi-tai?page={0}&limit={1}{2}',
   NOI_SOI_TAI_ID: '/api/noi-soi-tai/{0}',
+
+  OXIMETER: '/api/pulse-oximeter',
+  OXIMETER_QUERY: '/api/pulse-oximeter?page={0}&limit={1}{2}',
+  OXIMETER_ID: '/api/pulse-oximeter/{0}',
 };

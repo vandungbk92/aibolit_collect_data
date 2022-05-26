@@ -5,30 +5,19 @@ const { Schema } = mongoose;
 
 const SpO2Schema = new Schema(
   {
-    // oxigenSaturation: {
-    //   type: Number,
-    //   required: true
-    // },
-    // pulseRate: {
-    //   type: Number,
-    //   required: true
-    // },
-    // perfussionIndex: {
-    //   type: Number,
-    //   required: true
-    // },
-    // time: {
-    //   type: Date,
-    //   required: true
-    // }
-    data: {
-      type: Array,
-      required: true
+    oxigenSaturation: Number,
+    pulseRate: Number,
+    perfussionIndex: Number,
+    time: Date,
+
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
-    id_benhnhan: {
-      type: String,
-      required: true
-    }
+    oximeter_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'OximeterHistory',
+    },
   },
   {
     timestamps: {
@@ -37,6 +26,8 @@ const SpO2Schema = new Schema(
     }
   }
 );
-
+SpO2Schema.index({ user_id: 1  });
+SpO2Schema.index({ time: 1  });
+SpO2Schema.index({ oximeter_id: 1  });
 SpO2Schema.plugin(mongoosePaginate);
 export default mongoose.model("SpO2", SpO2Schema);

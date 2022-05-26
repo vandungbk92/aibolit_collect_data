@@ -23,9 +23,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 connect();
 
 const app = express();
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 1000000 }));
-
+app.use(bodyParser.json({ limit: '1024mb' }));
+app.use(bodyParser.urlencoded({ limit: "1024mb", extended: true, parameterLimit: 1000000 }));
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 app.use('/api', router);
 

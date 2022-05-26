@@ -14,6 +14,7 @@ import { soidaRouter } from './api/resources/soida/soida.router';
 import { uploadsRouter } from './api/resources/uploads/uploads.router';
 import { benhnhanRouter } from './api/resources/benhnhan/benhnhan.router';
 import { SpO2Router } from './api/resources/spo2/spo2.router.';
+import { settingRouter } from './api/resources/setting/setting.router';
 
 const router = express.Router();
 router.use('/users', userRouter);
@@ -30,5 +31,6 @@ router.use('/soi-da', soidaRouter);
 router.use('/uploads', uploadsRouter);
 router.use('/benh-nhan', benhnhanRouter);
 router.use('/pulse-oximeter', SpO2Router)
+router.use('/setting', settingRouter)
 
 module.exports = router;

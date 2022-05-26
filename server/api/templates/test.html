@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+
+window.onload = function () {
+	var chart = new CanvasJS.Chart("chartContainer", 
+	{
+		"theme": "light2",
+		"title":{"text": "render Method"},
+		"data": [              
+		{
+			"type": "column",
+			"dataPoints": [
+				{ label: "apple",  y: 10  },
+				{ label: "orange", y: 15  },
+				{ label: "banana", y: 25  },
+				{ label: "mango",  y: 30  },
+				{ label: "grape",  y: 28  },
+				{ label: "grape",  y: 28  },
+				{ label: "grape1",  y: 28  },
+				{ label: "grape2",  y: 28  },
+				{ label: "grape3",  y: 28  },
+				{ label: "grape4",  y: 28  },
+				{ label: "grape5",  y: 28  }
+			]
+		}
+		]
+	});
+	chart.render();
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%; margin: 0px auto;"></div>
+<div>{company}</div>
+</body>
+</html>

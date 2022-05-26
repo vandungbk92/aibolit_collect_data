@@ -224,7 +224,7 @@ export default {
 
     const userUpdate = await User.findOneAndUpdate({ _id: req.user._id }, {password: encryptedPass}, { new: true });
 
-    let mailOptions = {
+    /*let mailOptions = {
       from: `Hồ sơ sức khỏe <${config.mail.auth.user}>`, // sender address
       to: userUpdate.email, // list of receivers
       subject: 'Đổi mật khẩu thành công', // Subject line
@@ -240,7 +240,7 @@ export default {
       } else {
 
       }
-    });
+    });*/
     return res.json(userUpdate);
   },
 
