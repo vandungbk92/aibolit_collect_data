@@ -292,9 +292,6 @@ export default {
       data.xValues = xValues.join(',');
       data.yOxiValues = yOxiValues.join(',');
       data.yPulseValues = yPulseValues.join(',');
-      console.log(xValues)
-      console.log(yOxiValues)
-
       carbone.render(
         templatePath,
         data,
