@@ -269,7 +269,7 @@ export default {
       let data = await OximeterHistory.findById(id).lean();
       let templatePath = 'server/api/templates/test1.html';
 
-      data.measurementDate = moment(data.measurementDate).lang("vi").format('dd DD MMMM YYYY HH:mm')
+      data.measurementDate = moment(data.measurementDate).locale("vi").format('dd DD MMMM YYYY HH:mm')
 
       data.percentBelowThreshold = data.totalTimeBelowThreshold / data.totalTime * 100
 
@@ -326,6 +326,7 @@ export default {
       const id = req.user._id;
       let data = await OximeterHistory.aggregate([
         { $match: {user_id: mongoose.Types.ObjectId(id)}},
+        { $sort: { measurementDate: -1 }},
         {
           $group: {
             _id: { year: { $year: "$measurementDate" }, month: { $month: "$measurementDate" }, day: {$dayOfMonth :"$measurementDate" } },
@@ -346,11 +347,13 @@ export default {
             maxTimeRange: { $max: "$maxTimeRange" },
             total: {$sum: 1}
           }
-        }
+        },
+        { $sort: { measurementDate: -1 }}
       ])
 
       data = data.map(dtail => {
-        let avgTimeBelowThreshold = dtail.totalBelowThreshold === 0 ? 0 : (dtail.totalTimeBelowThreshold / dtail.totalBelowThreshold) * 100
+        // tổng thời gian dưới ngưỡng / tổng số lần dưới ngưỡng.
+        let avgTimeBelowThreshold = dtail.totalBelowThreshold === 0 ? 0 : Math.round(dtail.totalTimeBelowThreshold / dtail.totalBelowThreshold)
         return {...dtail,
           measurementDate: dtail.measurementDate,
           totalTime: dateFormatterFromDate(dtail.totalTime),
