@@ -45,14 +45,13 @@ export default {
       const SPO2_MIN = setting.oximeter_monitor; // % SP02 dưới ngưỡng cần kiểm soát.
 
       let firstRecord = JSON.parse(dataArray[0]);
-      let measurementDate = moment(firstRecord.time);
+
       let oximeter_id = null;
       if (typeRecord === '3' || typeRecord === 3) {
         let timeStart = moment(firstRecord.time).subtract(2, 'seconds');
         let timeEnd = moment(firstRecord.time);
         let timeStartDay = moment().startOf('days');
         if (timeStart.toISOString() < timeStartDay.toISOString()) {
-
           timeStart = timeStartDay;
         }
 
@@ -69,6 +68,14 @@ export default {
           dataArray = [...dsSPO2, ...dataArray];
         }
       }
+
+      let startRecord = JSON.parse(dataArray[0]);
+      let endRecord = JSON.parse(dataArray[dataArray.length - 1]);
+
+      let measurementDate = moment(startRecord.time);
+      let timeStartRecord = moment(startRecord.time);
+      let timeEndRecord = moment(endRecord.time);
+
 
       let underThresh = []; // thông tin những lần dưới ngưỡng trong toàn bộ dữ liệu file.
       let subArray = []; // Bảng tạm chứa, thông tin 1 khoảng liên tục, dưới ngưỡng.
@@ -89,6 +96,8 @@ export default {
       let totalBelowThreshold = 0; // Tổng số lần dưới ngưỡng.
       let avgTimeBelowThreshold = 0; // trung bình thời gian dưới ngưỡng = tổng thời gian dưới ngưỡng / số lần dưới ngưỡng.
       let maxTimeRange = 0; // khoảng thời gian dưới ngưỡng lớn nhất.
+      let timeStartMax = null;
+      let timeEndMax = null;
 
       let totalTime = dataArray.length;
       for (let i = 0; i < dataArray.length; i++) {
@@ -112,7 +121,7 @@ export default {
 
           // kiểm tra dưới ngưỡng, mỗi khoảng dưới ngưỡng là 1 array trong mảng underThresh.
           if (data.oxigenSaturation <= SPO2_MIN) {
-            console.log(data.oxigenSaturation, '111111111');
+
             subArray.push(data);
             if (i === dataArray.length - 1) {
               underThresh.push(subArray);
@@ -139,7 +148,11 @@ export default {
         let diffTime = underThresh[i].length;
 
         // tìm khoảng thời gian dưới ngưỡng lớn nhất.
-        if (diffTime > maxTimeRange) maxTimeRange = diffTime;
+        if (diffTime > maxTimeRange){
+          maxTimeRange = diffTime;
+          timeStartMax = moment(underThresh[i][0].time);
+          timeEndMax = moment(underThresh[i][underThresh[i].length - 1].time);
+        }
 
         totalTimeBelowThreshold += diffTime;
         totalBelowThreshold += 1;
@@ -166,6 +179,10 @@ export default {
           maxTimeRange: maxTimeRange, // thời gian dưới ngưỡng dài nhất
           user_id: id,
           typeRecord,
+          timeStartMax,
+          timeEndMax,
+          timeStartRecord,
+          timeEndRecord
         }, { new: true });
       } else {
         const insertedDate = await OximeterHistory.create({
@@ -187,6 +204,10 @@ export default {
           typeRecord,
           measurementDate,
           oximeterMonitor: SPO2_MIN,
+          timeStartMax,
+          timeEndMax,
+          timeStartRecord,
+          timeEndRecord
         });
         oximeter_id = insertedDate._id;
       }
@@ -282,6 +303,15 @@ export default {
 
       data.measurementDate = moment(data.measurementDate).locale('vi').format('dd DD MMMM YYYY HH:mm');
 
+      data.timeStartRecord = moment(data.timeStartRecord).format('DD/MM/YYYY HH:mm:ss');
+      data.timeEndRecord = moment(data.timeEndRecord).format('DD/MM/YYYY HH:mm:ss');
+
+      data.timeStartMax = data.timeStartMax ? moment(data.timeStartMax).format('DD/MM/YYYY HH:mm:ss') : '';
+      data.timeEndMax = data.timeEndMax ? moment(data.timeEndMax).format('DD/MM/YYYY HH:mm:ss') : '';
+      data.timeRangeThreshold = ''
+      if(data.timeStartMax || data.timeEndMax){
+        data.timeRangeThreshold = `(Từ ${data.timeStartMax} đến ${data.timeEndMax})`
+      }
       data.percentBelowThreshold = data.totalTimeBelowThreshold / data.totalTime * 100;
 
       data.totalTime = dateFormatterFromDate(data.totalTime);

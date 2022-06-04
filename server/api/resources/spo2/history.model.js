@@ -10,6 +10,12 @@ const OximeterHistorySchema = new Schema({
 
   totalTime: Number, // tổng thời gian đo (cộng vào với cũ)
 
+  timeStartRecord: Date,
+  timeEndRecord: Date,
+
+  timeStartMax: Date,
+  timeEndMax: Date,
+
   minPI: Number,
   maxPI: Number,
   minPulseRate: Number,
