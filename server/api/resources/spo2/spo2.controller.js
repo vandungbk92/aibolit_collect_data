@@ -4,7 +4,8 @@ import moment from 'moment';
 import OximeterHistory from './history.model';
 import * as fs from 'fs';
 import { filterRequest, optionsRequest } from '../../utils/filterRequest';
-const carbone = require("carbone");
+
+const carbone = require('carbone');
 var pdf = require('html-pdf');
 import mongoose from 'mongoose';
 import { dateFormatterFromDate } from '../../utils/convertDateTime';
@@ -14,7 +15,7 @@ export default {
   async oximeterFile(req, res) {
     try {
       const id = req.user._id;
-      let {typeRecord} = req.body;
+      let { typeRecord } = req.body;
 
       // Thông tin của file được gửi lên từ client.
       const oximeter = req.files && req.files.oximeter ? req.files.oximeter : '';
@@ -25,37 +26,47 @@ export default {
 
       // đọc dữ liệu từ file.
       let dataArray = fs.readFileSync(oximeter.path, 'utf8').split('\n');
+      // xóa dòng cuối và xóa file
       dataArray.pop();
+      fs.unlinkSync(oximeter.path);
 
       // lấy thông tin của Setting của người dùng.
-      let setting = await Setting.findOne({user_id: id}).lean();
-      if(!setting){
-        setting = await Setting.create({user_id: _id, oximeter_min: 90, oximeter_max: 100, oximeter_monitor: 96, pulse_max: 100, pulse_min: 60})
+      let setting = await Setting.findOne({ user_id: id }).lean();
+      if (!setting) {
+        setting = await Setting.create({
+          user_id: _id,
+          oximeter_min: 90,
+          oximeter_max: 100,
+          oximeter_monitor: 96,
+          pulse_max: 100,
+          pulse_min: 60,
+        });
       }
       const SPO2_MIN = setting.oximeter_monitor; // % SP02 dưới ngưỡng cần kiểm soát.
 
       let firstRecord = JSON.parse(dataArray[0]);
-      let measurementDate = moment(firstRecord.time)
+      let measurementDate = moment(firstRecord.time);
       let oximeter_id = null;
-      if(typeRecord === '3' || typeRecord === 3){
+      if (typeRecord === '3' || typeRecord === 3) {
         let timeStart = moment(firstRecord.time).subtract(2, 'seconds');
         let timeEnd = moment(firstRecord.time);
         let timeStartDay = moment().startOf('days');
-        if(timeStart.toISOString() < timeStartDay.toISOString()){
-          timeStart = timeStartDay
+        if (timeStart.toISOString() < timeStartDay.toISOString()) {
+
+          timeStart = timeStartDay;
         }
 
         // kiểm tra xem có bản ghi nào trước đó k và lần đo gần nhất là đo phân tích.
-        let spo2 = await SpO2.findOne({user_id: id, time: {$gte: timeStart, $lt: timeEnd}}).lean();
-        let oximeter = await OximeterHistory.findOne({}).sort({measurementDate: -1}).lean();
+        let spo2 = await SpO2.findOne({ user_id: id, time: { $gte: timeStart, $lt: timeEnd } }).lean();
+        let oximeter = await OximeterHistory.findOne({}).sort({ measurementDate: -1 }).lean();
 
-        if(spo2 && oximeter && oximeter.typeRecord === 3){
-          oximeter_id = spo2.oximeter_id
+        if (spo2 && oximeter && oximeter.typeRecord === 3) {
+          oximeter_id = spo2.oximeter_id;
 
           // lấy danh sách toàn bộ spo2 của các bản ghi trước đó.
-          let dsSPO2 = await SpO2.find({oximeter_id: oximeter_id})
+          let dsSPO2 = await SpO2.find({ oximeter_id: oximeter_id });
 
-          dataArray = [...dsSPO2, ...dataArray]
+          dataArray = [...dsSPO2, ...dataArray];
         }
       }
 
@@ -81,9 +92,9 @@ export default {
 
       let totalTime = dataArray.length;
       for (let i = 0; i < dataArray.length; i++) {
-        let data = dataArray[i]
-        if(data){
-          if(typeof data === 'string'){
+        let data = dataArray[i];
+        if (data) {
+          if (typeof data === 'string') {
             data = JSON.parse(dataArray[i]);
           }
           details.push(data);
@@ -101,9 +112,9 @@ export default {
 
           // kiểm tra dưới ngưỡng, mỗi khoảng dưới ngưỡng là 1 array trong mảng underThresh.
           if (data.oxigenSaturation <= SPO2_MIN) {
-            console.log(data.oxigenSaturation, '111111111')
+            console.log(data.oxigenSaturation, '111111111');
             subArray.push(data);
-            if(i === dataArray.length - 1){
+            if (i === dataArray.length - 1) {
               underThresh.push(subArray);
               subArray = [];
             }
@@ -113,8 +124,8 @@ export default {
               subArray = [];
             }
           }
-        }else{
-          console.log('1111')
+        } else {
+          console.log('1111');
         }
       }
 
@@ -125,19 +136,19 @@ export default {
         let endDate = moment(underThresh[i][underThresh[i].length - 1].time); // thời gian cuối của mỗi khoảng.
 
         let diffTime = endDate.diff(startDate, 'seconds');*/
-        let diffTime = underThresh[i].length
+        let diffTime = underThresh[i].length;
 
         // tìm khoảng thời gian dưới ngưỡng lớn nhất.
         if (diffTime > maxTimeRange) maxTimeRange = diffTime;
 
         totalTimeBelowThreshold += diffTime;
-        totalBelowThreshold += 1
+        totalBelowThreshold += 1;
       }
-      if(totalBelowThreshold > 0){
-        avgTimeBelowThreshold = totalTimeBelowThreshold / totalBelowThreshold
+      if (totalBelowThreshold > 0) {
+        avgTimeBelowThreshold = totalTimeBelowThreshold / totalBelowThreshold;
       }
 
-      if(oximeter_id){
+      if (oximeter_id) {
         await OximeterHistory.findByIdAndUpdate(oximeter_id, {
           avgSpO2: parseInt(totalSpO2 / totalTime), // giá trị sp02 trung bình
           avgPulseRate: parseInt(totalPulseRate / totalTime), // giá trị Pulse trung bình
@@ -154,9 +165,9 @@ export default {
           avgTimeBelowThreshold,
           maxTimeRange: maxTimeRange, // thời gian dưới ngưỡng dài nhất
           user_id: id,
-          typeRecord
-        }, {new: true});
-      }else{
+          typeRecord,
+        }, { new: true });
+      } else {
         const insertedDate = await OximeterHistory.create({
           avgSpO2: parseInt(totalSpO2 / totalTime), // giá trị sp02 trung bình
           avgPulseRate: parseInt(totalPulseRate / totalTime), // giá trị Pulse trung bình
@@ -175,24 +186,24 @@ export default {
           user_id: id,
           typeRecord,
           measurementDate,
-          oximeterMonitor: SPO2_MIN
+          oximeterMonitor: SPO2_MIN,
         });
-        oximeter_id = insertedDate._id
+        oximeter_id = insertedDate._id;
       }
 
-      let dataAddSP02 = []
+      let dataAddSP02 = [];
       details = details.filter(data => {
-        if(!data.oximeter_id){
-          data.oximeter_id = oximeter_id
-          data.user_id = id
-          dataAddSP02 = [...dataAddSP02, data]
+        if (!data.oximeter_id) {
+          data.oximeter_id = oximeter_id;
+          data.user_id = id;
+          dataAddSP02 = [...dataAddSP02, data];
         }
-      })
+      });
 
-      await SpO2.create(dataAddSP02)
-      return res.json({ success: true });
+      await SpO2.create(dataAddSP02);
+      return res.json({ success: true, oximeter_id: oximeter_id });
     } catch (e) {
-      console.log(e)
+      console.log(e);
       return res.status(500).send(e);
     }
   },
@@ -237,24 +248,24 @@ export default {
 
   async getAllDates(req, res) {
     try {
-      let {measurementDate} = req.query
-      let query = filterRequest(req.query, false)
-      let options = optionsRequest(req.query)
-      if(req.query.limit && req.query.limit === '0'){
+      let { measurementDate } = req.query;
+      let query = filterRequest(req.query, false);
+      let options = optionsRequest(req.query);
+      if (req.query.limit && req.query.limit === '0') {
         options.pagination = false;
       }
 
-      if(measurementDate){
+      if (measurementDate) {
         query.measurementDate = {
           $gte: moment(measurementDate).startOf('days').toDate(),
-          $lte: moment(measurementDate).endOf('days').toDate()
-        }
+          $lte: moment(measurementDate).endOf('days').toDate(),
+        };
       }
 
-      options.sort = {measurementDate: -1}
+      options.sort = { measurementDate: -1 };
       query.user_id = req.user._id;
-      console.log(query, 'query')
-      const data = await OximeterHistory.paginate(query, options)
+      console.log(query, 'query');
+      const data = await OximeterHistory.paginate(query, options);
       return res.json(data);
     } catch (err) {
       console.error(err);
@@ -262,16 +273,16 @@ export default {
     }
   },
   async phantichFunc(req, res) {
-    try{
+    try {
       // lấy thông tin phân tích.
-      let {id} = req.params;
+      let { id } = req.params;
 
       let data = await OximeterHistory.findById(id).lean();
-      let templatePath = 'server/api/templates/test1.html';
+      let templatePath = 'server/api/templates/report.html';
 
-      data.measurementDate = moment(data.measurementDate).locale("vi").format('dd DD MMMM YYYY HH:mm')
+      data.measurementDate = moment(data.measurementDate).locale('vi').format('dd DD MMMM YYYY HH:mm');
 
-      data.percentBelowThreshold = data.totalTimeBelowThreshold / data.totalTime * 100
+      data.percentBelowThreshold = data.totalTimeBelowThreshold / data.totalTime * 100;
 
       data.totalTime = dateFormatterFromDate(data.totalTime);
 
@@ -280,81 +291,124 @@ export default {
       data.maxTimeRange = dateFormatterFromDate(data.maxTimeRange);
 
       // danh sách SP02 vẽ biểu đồ.
-      let spo2List = await SpO2.find({oximeter_id: id}).sort({time: 1}).lean();
+      let spo2List = await SpO2.find({ oximeter_id: id }).sort({ time: 1 }).lean();
       let xValues = [];
       let yOxiValues = [];
       let yPulseValues = [];
       spo2List.forEach(curr => {
-        xValues.push(moment(curr.time).format('HH:mm:ss'))
-        yOxiValues.push(curr.oxigenSaturation)
-        yPulseValues.push(curr.pulseRate)
-      })
+        xValues.push(moment(curr.time).format('HH:mm:ss'));
+        yOxiValues.push(curr.oxigenSaturation);
+        yPulseValues.push(curr.pulseRate);
+      });
       data.xValues = xValues.join(',');
       data.yOxiValues = yOxiValues.join(',');
       data.yPulseValues = yPulseValues.join(',');
+
+      /*var options = {
+        convertTo : 'pdf'
+      };*/
+
       carbone.render(
         templatePath,
         data,
-        async function (err, result) {
+        // options,
+        async function(err, result) {
           if (err) {
             console.log(err);
           }
-          // fs.writeFileSync('result.html', result);
-          // return res.json({data: 1})
-          res.send(Buffer.from(result).toString());
+          await fs.writeFileSync(`${id}.html`, result);
+
+          var html = fs.readFileSync(`${id}.html`, 'utf8');
+          var options = {
+            format: 'A5'
+          };
+
+          pdf.create(html, options).toStream(function(err, stream) {
+            fs.unlinkSync(`${id}.html`);
+            stream.pipe(res);
+          });
+
+          // res.send(Buffer.from(result).toString());
+          // res.send(Buffer.from(result).toString("base64"));
           // let a = await fs.createReadStream(result)
           // res.send(a)
-        }
+        },
       );
-    }catch (e) {
-      return res.status(500).send({success: false, message: "Có lỗi hệ thống"});
+    } catch (e) {
+      console.log(e)
+      return res.status(500).send({ success: false, message: 'Có lỗi hệ thống' });
     }
   },
 
   async phantichFunc2(req, res) {
-    var html = fs.readFileSync('server/api/templates/test1.html', 'utf8');
-    var options = {company: "Thinklabs JSC", renderDelay : 500}
+    // var html = fs.readFileSync('server/api/templates/test1.html', 'utf8');
+    var html = fs.readFileSync('result.html', 'utf8');
+    var options = {
+      format: 'A5',
+      // 'type': 'jpeg',           // allowed file types: png, jpeg, pdf
+      // "quality": "100",
+      // "height": "10.5in",        // allowed units: mm, cm, in, px
+      // "width": "3in",            // allowed units: mm, cm, in, px
+      // "orientation": "portrait"
+    };
 
-    pdf.create(html, options).toFile('./businesscard.pdf', function(err, data) {
-      if (err) return console.log(err);
-      console.log(data); // { filename: '/app/businesscard.pdf' }
-      return res.json(data)
+    pdf.create(html, options).toStream(function(err, stream) {
+      stream.pipe(res);
     });
+
+    /* pdf.create(html).toBuffer(function(err, buffer){
+       console.log('This is a buffer:', Buffer.isBuffer(buffer));
+     });*/
+
+    /*pdf.create(html, options).toFile('./businesscard.pdf', function(err, data) {
+      if (err) return console.log(err);
+      return res.json(data);
+    });*/
   },
   async getListDateByUser(req, res) {
     try {
       const id = req.user._id;
       let data = await OximeterHistory.aggregate([
-        { $match: {user_id: mongoose.Types.ObjectId(id)}},
-        { $sort: { measurementDate: -1 }},
+        {
+          $match: {
+            user_id: mongoose.Types.ObjectId(id),
+            typeRecord: 3,
+          },
+        },
+        { $sort: { measurementDate: -1 } },
         {
           $group: {
-            _id: { year: { $year: "$measurementDate" }, month: { $month: "$measurementDate" }, day: {$dayOfMonth :"$measurementDate" } },
-            measurementDate: {$last: "$measurementDate"},
-            totalSpO2: { $sum: { $multiply: [ "$avgSpO2", "$totalTime" ] } },
-            totalPulseRate: { $sum: { $multiply: [ "$avgPulseRate", "$totalTime" ] } },
-            totalPI: { $sum: { $multiply: [ "$avgPI", "$totalTime" ] } },
-            totalTime: { $sum: "$totalTime" },
-            minPI: { $min: "$minPI" },
-            maxPI: { $min: "$maxPI" },
-            minPulseRate: { $min: "$minPulseRate" },
-            maxPulseRate: { $min: "$maxPulseRate" },
-            minOximeter: { $min: "$minOximeter" },
-            maxOximeter: { $min: "$maxOximeter" },
-            oximeterMonitor: { $first: "$oximeterMonitor" },
-            totalTimeBelowThreshold: { $sum: "$totalTimeBelowThreshold" },
-            totalBelowThreshold: { $sum: "$totalBelowThreshold" },
-            maxTimeRange: { $max: "$maxTimeRange" },
-            total: {$sum: 1}
-          }
+            _id: {
+              year: { $year: '$measurementDate' },
+              month: { $month: '$measurementDate' },
+              day: { $dayOfMonth: '$measurementDate' },
+            },
+            measurementDate: { $last: '$measurementDate' },
+            totalSpO2: { $sum: { $multiply: ['$avgSpO2', '$totalTime'] } },
+            totalPulseRate: { $sum: { $multiply: ['$avgPulseRate', '$totalTime'] } },
+            totalPI: { $sum: { $multiply: ['$avgPI', '$totalTime'] } },
+            totalTime: { $sum: '$totalTime' },
+            minPI: { $min: '$minPI' },
+            maxPI: { $max: '$maxPI' },
+            minPulseRate: { $min: '$minPulseRate' },
+            maxPulseRate: { $max: '$maxPulseRate' },
+            minOximeter: { $min: '$minOximeter' },
+            maxOximeter: { $max: '$maxOximeter' },
+            oximeterMonitor: { $first: '$oximeterMonitor' },
+            totalTimeBelowThreshold: { $sum: '$totalTimeBelowThreshold' },
+            totalBelowThreshold: { $sum: '$totalBelowThreshold' },
+            maxTimeRange: { $max: '$maxTimeRange' },
+            total: { $sum: 1 },
+          },
         },
-        { $sort: { measurementDate: -1 }}
-      ])
+        { $sort: { measurementDate: -1 } },
+      ]);
 
       data = data.map(dtail => {
         // tổng thời gian dưới ngưỡng / tổng số lần dưới ngưỡng.
-        let avgTimeBelowThreshold = dtail.totalBelowThreshold === 0 ? 0 : Math.round(dtail.totalTimeBelowThreshold / dtail.totalBelowThreshold)
-        return {...dtail,
+        let avgTimeBelowThreshold = dtail.totalBelowThreshold === 0 ? 0 : Math.round(dtail.totalTimeBelowThreshold / dtail.totalBelowThreshold);
+        return {
+          ...dtail,
           measurementDate: dtail.measurementDate,
           totalTime: dateFormatterFromDate(dtail.totalTime),
           totalTimeBelowThreshold: dateFormatterFromDate(dtail.totalTimeBelowThreshold),
@@ -363,10 +417,10 @@ export default {
           avgSpO2: dtail.totalSpO2 / dtail.totalTime,
           avgPulseRate: dtail.totalPulseRate / dtail.totalTime,
           avgPI: dtail.totalPI / dtail.totalTime,
-          avgTimeBelowThreshold: dateFormatterFromDate(avgTimeBelowThreshold)
-        }
-      })
-      return res.json(data)
+          avgTimeBelowThreshold: dateFormatterFromDate(avgTimeBelowThreshold),
+        };
+      });
+      return res.json(data);
     } catch (err) {
       console.log(err);
     }
