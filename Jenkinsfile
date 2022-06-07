@@ -24,7 +24,7 @@ pipeline {
                                     && docker stack deploy -c ./thinklabsdev/aibolitdataCI/docker-compose.yml aibolitdata \
                                     && rm -rf ./thinklabsdev/aibolitdataCIB \
                                     && mv ./thinklabsdev/aibolitdataCI/ ./thinklabsdev/aibolitdataCIB",
-                                execTimeout: 1800000,
+                                execTimeout: 18000000,
                                 flatten: false,
                                 makeEmptyDirs: false,
                                 noDefaultExcludes: false,
