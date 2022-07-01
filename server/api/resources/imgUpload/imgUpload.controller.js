@@ -8,7 +8,8 @@ const {bucketName} = config.cos;
 
 export default {
   findFileById(req, res) {
-    // return res.redirect(fileUtils.getUrlFile(req.params.id));
+    const {id} = req.params;
+    return res.sendFile(path.join(process.cwd(), `./uploads/files/${  id}`));
   },
   async uploadFile(req, res) {
     try {

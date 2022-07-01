@@ -31,4 +31,6 @@ export const URL = {
   SOI_DA: '/soi-da',
   SOI_DA_ID: '/soi-da/{0}',
   SOI_DA_ADD: '/soi-da/add',
+
+  CHI_TIET_DU_LIEU: '/chi-tiet-du-lieu/{0}',
 };

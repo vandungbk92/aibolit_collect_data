@@ -30,6 +30,7 @@ import './styles/fonts.css';
 import './styles/main.scss';
 import './styles/layouts.scss';
 import './styles/customTheme.scss';
+import './styles/customHinhanh.css';
 
 import { toggleLoading } from '@containers/App/AppProvider/actions';
 import { COMMON_APP } from './commons/common_app';
