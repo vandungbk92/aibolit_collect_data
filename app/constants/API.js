@@ -51,4 +51,8 @@ export const API = {
   OXIMETER: '/api/pulse-oximeter',
   OXIMETER_QUERY: '/api/pulse-oximeter?page={0}&limit={1}{2}',
   OXIMETER_ID: '/api/pulse-oximeter/{0}',
+
+  QUAN_LY_DU_LIEU: '/api/quan-ly-du-lieu',
+  QUAN_LY_DU_LIEU_QUERY: '/api/quan-ly-du-lieu?page={0}&limit={1}{2}',
+  QUAN_LY_DU_LIEU_ID: '/api/quan-ly-du-lieu/{0}',
 };

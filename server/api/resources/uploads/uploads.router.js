@@ -4,12 +4,15 @@ import path from 'path';
 import fs from 'fs';
 import uploadsController from './uploads.controller';
 import passport from 'passport';
+import moment from "moment";
 
 export const uploadsRouter = express.Router();
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    const savePath = path.resolve(__dirname, `../../../uploads/${req.params.id}`);
+    const date = moment(req.query.time).format('YYYY-MM-DD')
+    const time = moment(req.query.time).format('HH.mm.ss')
+    const savePath = path.resolve(__dirname, `../../../uploads/${req.params.id}/${date}/${time}`);
     if (!fs.existsSync(savePath)) {
       fs.mkdir(savePath, { recursive: true }, err => {
       });

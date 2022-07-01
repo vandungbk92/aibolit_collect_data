@@ -31,7 +31,7 @@ function uploadImages(images) {
   const config = {
     headers: {'content-type': 'multipart/form-data'}
   }
-  let path = '/api/files'
+  let path = '/api/files/'
   let dataRes = []
   const uploaders = images.map((file, index) => {
     // Initial FormData
@@ -42,6 +42,34 @@ function uploadImages(images) {
       const data = response.data;
       if(data){
         dataRes = [...dataRes, data.image_id]
+      }
+    }).catch(error => {
+      console.log(error, 'upload k thành công')
+    });
+  });
+
+  return axios.all(uploaders).then(axios.spread(function (res1, res2) {
+    return dataRes
+  }));
+}
+
+function uploadImagesFrame(images, id, time) {
+  const config = {
+    headers: {'content-type': 'multipart/form-data'}
+  }
+  let path = `/api/uploads/${id}?time=${time}`
+  let dataRes = []
+  const uploaders = images.map((file, index) => {
+    // Initial FormData
+    const formData = new FormData();
+    formData.append("files", file);
+    // Make an AJAX upload request using Axios (replace Cloudinary URL below with your own)
+    return axios.post(path, formData, config).then(response => {
+      const {files} = response.data?.files;
+      if(files){
+        files.forEach(image => {
+          dataRes.push(image);
+        });
       }
     }).catch(error => {
       console.log(error, 'upload k thành công')
@@ -239,4 +267,5 @@ export {
   uploadFilePublic,
   deleteImagesUnitCombine,
   deleteFilesUnitCombine,
+  uploadImagesFrame,
 }

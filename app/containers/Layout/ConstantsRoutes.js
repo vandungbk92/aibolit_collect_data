@@ -42,6 +42,8 @@ import NoiSoiHongChiTiet from '@containers/Pages/NoiSoiHong/ChiTiet/Loadable';
 
 import SoiDa from '@containers/Pages/SoiDa/Loadable';
 import SoiDaChiTiet from '@containers/Pages/SoiDa/ChiTiet/Loadable';
+import QuanlyDulieu from '../Pages/QuanlyDulieu';
+import ChitietDulieu from 'Pages/QuanlyDulieu/Chitiet';
 
 function renderMenuIcon(icon) {
   return (
@@ -192,6 +194,23 @@ const constantsRoutes = [
     ],
     role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
   },
+
+  {
+    path: '/quan-ly-du-lieu',
+    menuName: 'Quản lý dữ liệu',
+    component: QuanlyDulieu,
+    icon: <CloudSyncOutlined/>,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+
+  {
+    path: '/chi-tiet-du-lieu/:id',
+    component: ChitietDulieu,
+    exact: true,
+    role: [CONSTANTS.ADMIN, CONSTANTS.MANAGE]
+  },
+
 ];
 
 export default constantsRoutes;
