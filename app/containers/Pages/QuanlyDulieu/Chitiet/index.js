@@ -290,7 +290,7 @@ class ChitietDulieu extends Component {
                       <Row gutter={10} className="btn-group">
                         <Button style={btnStyle} onClick={() => this.setState({ playing: true })}>Phát</Button>
                         <Button style={btnStyle} onClick={() => this.setState({ playing: false })}>Tạm dừng</Button>
-                        <Button style={btnStyle} onClick={() => this.onfullScreen()}><FullscreenOutlined /></Button>
+                        {/*<Button style={btnStyle} onClick={() => this.onfullScreen()}><FullscreenOutlined /></Button>*/}
                         <Button style={btnStyle} onClick={() => {
                           const frame = captureVideoFrame(this.player.getInternalPlayer(), 'jpeg');
                           const newImages = [...this.state.image];
