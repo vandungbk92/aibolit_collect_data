@@ -4,6 +4,7 @@ import {filterRequest, optionsRequest} from '../../utils/filterRequest'
 import labelService from "./label.service"
 import moment from 'moment';
 import path from 'path';
+import DataSet from '../dataSet/dataSet.model';
 
 export default {
   async create(req, res) {
@@ -19,6 +20,12 @@ export default {
         data = await Label.findOne({is_deleted: false, _id: dataAdd._id})
           .populate({path:'datasetId'})
           .lean()
+
+        let dataSetbyId = await DataSet.findOne({ is_deleted: false, _id: dataAdd.datasetId })
+          .lean()
+        const newlabel = dataSetbyId.label_cate ? dataSetbyId.label_cate : []
+        newlabel.push(data?._id);
+        await DataSet.findOneAndUpdate({ _id: dataAdd.datasetId }, newlabel, { new: true })
       }
       return res.json(data);
     } catch (e) {
@@ -78,6 +85,14 @@ export default {
       if (!data) {
         responseAction.error(res, 404, '');
       }
+      if (data) {
+        let dataSetbyId = await DataSet.findOne({ is_deleted: false, _id: data.datasetId })
+        const newlabel = dataSetbyId.label_cate ? dataSetbyId.label_cate : []
+        const indexLabel = newlabel.findIndex((label) => label._id === data._id)
+        newlabel.split(indexLabel, 1)
+        await DataSet.findOneAndUpdate({ _id: dataAdd.datasetId }, newlabel, { new: true })
+      }
+
 
       return res.json(data);
     } catch (e) {

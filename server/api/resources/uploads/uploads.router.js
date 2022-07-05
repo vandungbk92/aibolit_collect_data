@@ -10,6 +10,7 @@ export const uploadsRouter = express.Router();
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
+    console.log('req.query.time',req.query.time)
     const date = moment(req.query.time).format('YYYY-MM-DD')
     const time = moment(req.query.time).format('HH.mm.ss')
     const savePath = path.resolve(__dirname, `../../../uploads/${req.params.id}/${date}/${time}`);
