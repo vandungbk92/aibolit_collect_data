@@ -19,6 +19,8 @@ import { quanlydulieuRouter } from './api/resources/quanlydulieu/quanlydulieu.ro
 import { dataSetRouter } from './api/resources/dataSet/dataSet.router';
 import { labelRouter } from './api/resources/label/label.router';
 import { imageRouter } from './api/resources/image/image.router';
+import { videoRouter } from './api/resources/video/video.router';
+import { audioRouter } from './api/resources/audio/audio.router';
 
 const router = express.Router();
 router.use('/users', userRouter);
@@ -40,5 +42,7 @@ router.use('/quan-ly-du-lieu', quanlydulieuRouter);
 router.use('/data-set', dataSetRouter);
 router.use('/label', labelRouter)
 router.use('/image-data', imageRouter)
+router.use('/video-data', videoRouter)
+router.use('/audio-data', audioRouter)
 
 module.exports = router;

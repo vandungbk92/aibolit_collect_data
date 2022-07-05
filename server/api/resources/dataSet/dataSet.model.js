@@ -8,6 +8,8 @@ const dataSetSchema = new Schema({
 
   description: {type: String},
   images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image"}],
+  video: [{type: mongoose.Schema.Types.ObjectId, ref: "Video"}],
+  audio: [{type: mongoose.Schema.Types.ObjectId, ref: "Audio"}],
   label_cate: [{type: mongoose.Schema.Types.ObjectId, ref: "Label"}],
   is_deleted: { type: Boolean, default: false },
 }, {
