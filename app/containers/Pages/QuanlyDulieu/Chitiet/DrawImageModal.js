@@ -132,7 +132,7 @@ class DrawImageModal extends Component {
         onCancel={loading ? () => null : this.toggleModal}
         footer={[
           <div key={1}>
-            {dataRes.video && <Button
+            {dataRes?.video && <Button
               size="medium"
               danger
               type="primary"

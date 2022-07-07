@@ -25,6 +25,9 @@ connect();
 const app = express();
 app.use(bodyParser.json({ limit: '1024mb' }));
 app.use(bodyParser.urlencoded({ limit: "1024mb", extended: true, parameterLimit: 1000000 }));
+
+app.use('/server/uploads/', express.static('server/uploads/'))
+
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 app.use('/api', router);
 

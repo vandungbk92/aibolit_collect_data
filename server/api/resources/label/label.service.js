@@ -3,7 +3,17 @@ import Joi from 'joi';
 export default {
   validateBody(body, method) {
 
-    const objSchema = {}
+    const objSchema = {
+      datasetId: Joi.string().required().label('Mã Dataset').error((errors) => {
+        return {
+          template: 'không được bỏ trống',
+          context: {
+            errors: errors.length,
+            codes: errors.map((err) => err.type)
+          }
+        };
+      }),
+    }
 
     let newSchema = {}
     if (method === 'POST') {

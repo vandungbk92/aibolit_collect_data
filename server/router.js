@@ -39,7 +39,7 @@ router.use('/benh-nhan', benhnhanRouter);
 router.use('/pulse-oximeter', SpO2Router)
 router.use('/setting', settingRouter)
 router.use('/quan-ly-du-lieu', quanlydulieuRouter);
-router.use('/data-set', dataSetRouter);
+router.use('/dataset', dataSetRouter);
 router.use('/label', labelRouter)
 router.use('/image-data', imageRouter)
 router.use('/video-data', videoRouter)

@@ -8,12 +8,12 @@ const quanlydulieuSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  hinhanh:[],
-  video: {},
-  anhchupvideo: [],
-  audio: {},
-  type: "",
-  ngayupload: { type: Date, },
+  hinhanh:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image',
+  }],
+  video: [],
+  audio: [],
   ghichu: {type: String},
   is_deleted: { type: Boolean, default: false },
 }, {

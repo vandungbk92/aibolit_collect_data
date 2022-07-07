@@ -1,9 +1,9 @@
 import DataSet from './dataSet.model';
+import Label from '../label/label.model';
 import * as responseAction from '../../utils/responseAction'
 import {filterRequest, optionsRequest} from '../../utils/filterRequest'
 import dataSetService from './dataSet.service';
-import moment from 'moment';
-import path from 'path';
+
 
 export default {
   async create(req, res) {
@@ -83,11 +83,11 @@ export default {
     try {
       const { id } = req.params;
       const data = await DataSet.findOneAndUpdate({ _id: id }, { is_deleted: true }, { new: true });
-
       if (!data) {
         responseAction.error(res, 404, '');
       }
-
+      // xóa dữ liệu label.
+      await Label.updateMany({datasetId: id}, {$set: {is_deleted: true}}, {multi: true});
       return res.json(data);
     } catch (e) {
       console.error(e);
@@ -106,8 +106,7 @@ export default {
         .populate({ path: 'images' })
         .populate({ path: 'video' })
         .populate({ path: 'audio' })
-        .populate({ path: 'label_cate'})
-        .lean();
+        .populate({ path: 'label_cate' }).lean();
 
       if (!data) {
         responseAction.error(res, 404, '');

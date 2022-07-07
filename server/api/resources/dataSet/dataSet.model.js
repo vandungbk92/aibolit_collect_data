@@ -4,7 +4,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 const {Schema} = mongoose;
 const dataSetSchema = new Schema({
   dataset_name: {type: String},
-  dataset_status: {type: String},
+  dataset_status: {type: Boolean, default: true}, // là Đồng bộ hoặc
 
   description: {type: String},
   images: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image"}],

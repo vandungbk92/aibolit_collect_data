@@ -310,6 +310,15 @@ function formatFileName(str) {
   return str;
 }
 
+export function convertFileName(fileNm) {
+  let extension = path.extname(fileNm);
+  let fileWithoutExtension = formatFileName(path.basename(fileNm, extension));
+  let date_val = new Date();
+  let timestam = date_val.getTime();
+  let fileStorage = fileWithoutExtension + '_' + timestam + extension;
+  return fileStorage
+}
+
 export {
   create,
   createByName,

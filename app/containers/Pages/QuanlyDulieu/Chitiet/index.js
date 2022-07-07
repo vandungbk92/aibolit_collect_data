@@ -294,6 +294,7 @@ class ChitietDulieu extends Component {
                         <Button style={btnStyle} onClick={() => {
                           const frame = captureVideoFrame(this.player.getInternalPlayer(), 'jpeg');
                           const newImages = [...this.state.image];
+                          console.log(frame.dataUri, 'frame.dataUriframe.dataUri')
                           newImages.push(frame.dataUri);
                           this.setState({ image: newImages });
                         }}>Chụp màn hình</Button>

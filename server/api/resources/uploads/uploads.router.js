@@ -4,23 +4,22 @@ import path from 'path';
 import fs from 'fs';
 import uploadsController from './uploads.controller';
 import passport from 'passport';
-import moment from "moment";
+import {convertFileName} from '../../utils/fileUtils';
 
 export const uploadsRouter = express.Router();
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    const date = moment(req.query.time).format('YYYY-MM-DD')
-    const time = moment(req.query.time).format('HH.mm.ss')
-    const savePath = path.resolve(__dirname, `../../../uploads/${req.params.id}/${date}/${time}`);
+    var date = new Date();
+    const savePath = path.resolve(__dirname, `../../../uploads/${date.getFullYear()}/${(date.getMonth() +1)}/${date.getDate()}`);
     if (!fs.existsSync(savePath)) {
-      fs.mkdir(savePath, { recursive: true }, err => {
-      });
+      fs.mkdirSync(savePath, { recursive: true });
     }
     cb(null, savePath);
   },
   filename: function(req, file, cb) {
-    cb(null, new Date().toISOString().replace(/:/g, '-') + '_' + file.originalname);
+    let originalname = convertFileName(file.originalname);
+    cb(null, originalname);
   },
 });
 
@@ -41,7 +40,7 @@ const upload = multer({
 });
 
 uploadsRouter
-  .post('/:id', upload.fields(
+  .post('/', upload.fields(
     [{ name: 'files' }]
     ), uploadsController.uploadFiles);
 

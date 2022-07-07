@@ -6,7 +6,7 @@ const LabelSchema = new Schema({
   labelName: String,
   description : String,
   totalLabel: Number,
-  datasetId: { type: mongoose.Schema.Types.ObjectId, ref: "DataSet"},
+  datasetId: { type: mongoose.Schema.Types.ObjectId, ref: "DataSet", required: true},
   is_deleted: { type: Boolean, default: false, select: false },
 }, {
   timestamps: {

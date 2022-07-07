@@ -22,8 +22,7 @@ const config = {
         "pass": "thinklabs@36"
       }
     },
-    host_admin: 'https://311-admin.mybluemix.net',
-    host_citizen: 'https://311-web.mybluemix.net',
+    host_admin: 'https://data.thinklabs.com.vn',
     mail_mailgun: {
       "auth": {
         "api_key": "e1d4c20fa30e05a4cbc5c9435dc598f6-b892f62e-5d7832d3",
@@ -54,7 +53,6 @@ const config = {
       }
     },
     host_admin: 'http://localhost:8080',
-    host_citizen: 'http://localhost:8081',
     mail_mailgun: {
       "auth": {
         "api_key": "22c6ee1fde1b7cbc0b360ef9a8c7d6da-4836d8f5-76b43d5c",
