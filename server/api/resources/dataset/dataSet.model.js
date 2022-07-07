@@ -20,4 +20,4 @@ const dataSetSchema = new Schema({
   collection: 'dmdataSet'
 });
 dataSetSchema.plugin(mongoosePaginate);
-export default mongoose.model('DataSet', dataSetSchema);
+export default mongoose.model('Dataset', dataSetSchema);

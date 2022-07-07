@@ -8,12 +8,22 @@ const quanlydulieuSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  datasetId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Dataset',
+  },
   hinhanh:[{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Image',
   }],
-  video: [],
-  audio: [],
+  video: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Video',
+  }],
+  audio: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Audio',
+  }],
   ghichu: {type: String},
   is_deleted: { type: Boolean, default: false },
 }, {
@@ -21,7 +31,7 @@ const quanlydulieuSchema = new Schema({
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   },
-  collection: 'dmquanlydulieu'
+  collection: 'quanlydulieu'
 });
 quanlydulieuSchema.plugin(mongoosePaginate);
 export default mongoose.model('QuanlyDulieu', quanlydulieuSchema);

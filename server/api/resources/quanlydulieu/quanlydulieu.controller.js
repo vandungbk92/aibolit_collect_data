@@ -1,25 +1,35 @@
 import QuanlyDulieu from './quanlydulieu.model';
+import Image from '../image/image.model';
+import Video from '../video/video.model';
+import Audio from '../audio/audio.model';
 import * as responseAction from '../../utils/responseAction'
 import {filterRequest, optionsRequest} from '../../utils/filterRequest'
 import quanlycongviecService from './quanlydulieu.service';
-import moment from 'moment';
-import path from 'path';
 
 export default {
   async create(req, res) {
     try {
-      const {value, error} = quanlycongviecService.validateBody(req.body, 'POST');
+      let {value, error} = quanlycongviecService.validateBody(req.body, 'POST');
       if (error && error.details) {
         responseAction.error(res, 400, error.details[0]);
       }
-      const dataAdd = await QuanlyDulieu.create(value);
-      let data;
 
-      if (dataAdd) {
-        data = await QuanlyDulieu.findOne({is_deleted: false, _id: dataAdd._id})
-          .populate({ path: 'nhanvien_id', select: 'full_name' })
-          .lean();
+      value.nhanvien_id = req.user._id
+      const dataAdd = await QuanlyDulieu.create(value);
+      // if có datasetId thì cập nhật các Image, Video, Audio.
+      let reqApi = [];
+      if(value?.hinhanh?.length) reqApi.push(Image.updateMany({_id: {$in: value.hinhanh}}, {datasetId: value?.datasetId, dulieuId: dataAdd._id}, {multi: true}))
+      if(value?.video?.length) reqApi.push(Video.updateMany({_id: {$in: value.video}}, {datasetId: value?.datasetId, dulieuId: dataAdd._id}, {multi: true}))
+      if(value?.audio?.length) reqApi.push(Audio.updateMany({_id: {$in: value.audio}}, {datasetId: value?.datasetId, dulieuId: dataAdd._id}, {multi: true}))
+      if(reqApi.length){
+        await Promise.all(reqApi)
       }
+      let data = await dataAdd
+        .populate('hinhanh')
+        .populate('video')
+        .populate('audio')
+        .populate({path: 'datasetId', select: 'dataset_name'}).execPopulate()
+
       return res.json(data);
     } catch (e) {
       console.error(e);
@@ -42,10 +52,11 @@ export default {
       options.lean = true;
       options.sort = { created_at: -1 };
       options.populate = [
-        {
-          path: 'nhanvien_id',
-          select: 'full_name',
-        },
+        { path: 'nhanvien_id', select: 'full_name'},
+        { path: 'hinhanh'},
+        { path: 'video'},
+        { path: 'audio'},
+        {path: 'datasetId', select: 'dataset_name'}
       ];
 
       let data = await QuanlyDulieu.paginate(query, options);
@@ -61,6 +72,10 @@ export default {
       const { id } = req.params;
       const data = await QuanlyDulieu.findOne({ is_deleted: false, _id: id })
         .populate({ path: 'nhanvien_id', select: 'full_name' })
+        .populate('hinhanh')
+        .populate('video')
+        .populate('audio')
+        .populate({path: 'datasetId', select: 'dataset_name'})
         .lean();
       if (!data) {
         responseAction.error(res, 404, '');
@@ -97,11 +112,24 @@ export default {
       }
       const data = await QuanlyDulieu.findOneAndUpdate({ _id: id }, value, { new: true })
         .populate({ path: 'nhanvien_id', select: 'full_name' })
+        .populate('hinhanh')
+        .populate('video')
+        .populate('audio')
+        .populate({path: 'datasetId', select: 'dataset_name'})
         .lean();
 
       if (!data) {
-        responseAction.error(res, 404, '');
+        return responseAction.error(res, 404, '');
       }
+
+      let reqApi = [];
+      if(data?.hinhanh?.length) reqApi.push(Image.updateMany({_id: {$in: data.hinhanh}}, {datasetId: data?.datasetId}, {multi: true}))
+      if(data?.video?.length) reqApi.push(Video.updateMany({_id: {$in: data.video}}, {datasetId: data?.datasetId}, {multi: true}))
+      if(data?.audio?.length) reqApi.push(Audio.updateMany({_id: {$in: data.audio}}, {datasetId: data?.datasetId}, {multi: true}))
+      if(reqApi.length){
+        await Promise.all(reqApi)
+      }
+
 
       return res.json(data);
     } catch (e) {

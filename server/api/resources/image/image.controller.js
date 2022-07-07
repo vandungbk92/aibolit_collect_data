@@ -4,7 +4,7 @@ import {filterRequest, optionsRequest} from '../../utils/filterRequest'
 import ImageService from "./image.service"
 import moment from 'moment';
 import path from 'path';
-import DataSet from '../dataSet/dataSet.model';
+import DataSet from '../dataset/dataSet.model';
 
 export default {
   async create(req, res) {
@@ -37,9 +37,7 @@ export default {
   async getAll(req, res) {
     try {
       let query = filterRequest(req.query, true);
-      // if(req.user.role === 'ADMIN'){
-      //   query.user_id = req.user._id
-      // }
+
       if (req.query.limit && req.query.limit === '0') {
         const totalQuery = await Image.paginate(query, { limit: 0 });
         req.query.limit = totalQuery.total;

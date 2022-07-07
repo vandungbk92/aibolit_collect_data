@@ -2,7 +2,7 @@ import Label from './label.model';
 import * as responseAction from '../../utils/responseAction'
 import {filterRequest, optionsRequest} from '../../utils/filterRequest'
 import labelService from "./label.service"
-import DataSet from '../dataSet/dataSet.model';
+import Dataset from '../dataset/dataSet.model';
 
 export default {
   async create(req, res) {
@@ -12,7 +12,7 @@ export default {
         responseAction.error(res, 400, error.details[0]);
       }
       const dataAdd = await Label.create(value);
-      await DataSet.findByIdAndUpdate(value.datasetId, {$push: {label_cate: dataAdd._id}})
+      await Dataset.findByIdAndUpdate(value.datasetId, {$push: {label_cate: dataAdd._id}})
       let data = await dataAdd.populate('datasetId').execPopulate()
       return res.json(data);
     } catch (e) {
@@ -73,7 +73,7 @@ export default {
         responseAction.error(res, 404, '');
       }
       if (data) {
-        await DataSet.findOneAndUpdate({ _id: data.datasetId }, {$pull: {label_cate: id}}, { new: true })
+        await Dataset.findOneAndUpdate({ _id: data.datasetId }, {$pull: {label_cate: id}}, { new: true })
       }
 
       return res.json(data);

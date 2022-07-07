@@ -16,6 +16,7 @@ const ImageSchema = new Schema({
     default: 'upload'
   },
   datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "DataSet"},
+  dulieuId: {type: mongoose.Schema.Types.ObjectId, ref: "QuanlyDulieu"},
   labels: [{
     labelId:{type: mongoose.Schema.ObjectId, ref: 'Label'},
     xmax: Number,

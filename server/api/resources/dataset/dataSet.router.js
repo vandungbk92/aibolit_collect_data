@@ -7,7 +7,7 @@ export const dataSetRouter = express.Router();
 dataSetRouter.post('/', passport.authenticate('jwt', { session: false }), dataSetController.create);
 dataSetRouter.get('/', passport.authenticate('jwt', { session: false }), dataSetController.getAll);
 
-
+dataSetRouter.get('/:id/image', passport.authenticate('jwt', { session: false }), dataSetController.getAllImage)
 dataSetRouter
   .route('/:id')
   .get(passport.authenticate('jwt', { session: false }), dataSetController.findOne)

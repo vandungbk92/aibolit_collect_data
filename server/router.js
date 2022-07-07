@@ -16,7 +16,7 @@ import { benhnhanRouter } from './api/resources/benhnhan/benhnhan.router';
 import { SpO2Router } from './api/resources/spo2/spo2.router.';
 import { settingRouter } from './api/resources/setting/setting.router';
 import { quanlydulieuRouter } from './api/resources/quanlydulieu/quanlydulieu.router';
-import { dataSetRouter } from './api/resources/dataSet/dataSet.router';
+import { dataSetRouter } from './api/resources/dataset/dataSet.router';
 import { labelRouter } from './api/resources/label/label.router';
 import { imageRouter } from './api/resources/image/image.router';
 import { videoRouter } from './api/resources/video/video.router';

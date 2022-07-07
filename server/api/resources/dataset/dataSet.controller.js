@@ -1,4 +1,7 @@
 import DataSet from './dataSet.model';
+import Audio from '../audio/audio.model';
+import Video from '../video/video.model';
+import Image from '../image/image.model';
 import Label from '../label/label.model';
 import * as responseAction from '../../utils/responseAction'
 import {filterRequest, optionsRequest} from '../../utils/filterRequest'
@@ -76,6 +79,17 @@ export default {
     } catch (e) {
       console.error(e);
       responseAction.error(res, 500, e.errors)
+    }
+  },
+
+  async getAllImage(req, res) {
+    try {
+      const { id } = req.params;
+      const data = await Image.find({ is_deleted: false, datasetId: id }).lean();
+      return res.json(data);
+    } catch (e) {
+      console.error(e);
+      return responseAction.error(res, 500, e.errors)
     }
   },
 
