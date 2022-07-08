@@ -8,7 +8,7 @@ const VideoSchema = new Schema({
   video_desc: String,
   video_uri: String,
   video_path: String,
-  datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "DataSet"},
+  datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "Dataset"},
   dulieuId: {type: mongoose.Schema.Types.ObjectId, ref: "QuanlyDulieu"},
   is_deleted: { type: Boolean, default: false },
 }, {

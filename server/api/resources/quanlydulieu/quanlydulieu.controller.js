@@ -58,7 +58,7 @@ export default {
         { path: 'hinhanh'},
         { path: 'video'},
         { path: 'audio'},
-        {path: 'datasetId', select: 'dataset_name'}
+        // {path: 'datasetId', select: 'dataset_name'}
       ];
 
       let data = await QuanlyDulieu.paginate(query, options);

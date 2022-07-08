@@ -10,7 +10,6 @@ export default {
     try {
       const {files} = req.files;
       let {type, datasetId} = req.body;
-      console.log(type, datasetId)
 
       if (!files || !files?.length || !type) {
         return res.status(404).send({success: false, message: 'Dữ liệu tải lên không hợp lệ!'});

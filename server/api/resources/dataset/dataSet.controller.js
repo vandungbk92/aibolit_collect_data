@@ -1,6 +1,4 @@
-import DataSet from './dataSet.model';
-import Audio from '../audio/audio.model';
-import Video from '../video/video.model';
+import Dataset from './dataSet.model';
 import Image from '../image/image.model';
 import Label from '../label/label.model';
 import * as responseAction from '../../utils/responseAction'
@@ -15,11 +13,11 @@ export default {
       if (error && error.details) {
         responseAction.error(res, 400, error.details[0]);
       }
-      const dataAdd = await DataSet.create(value);
+      const dataAdd = await Dataset.create(value);
       let data;
 
       if (dataAdd) {
-        data = await DataSet.findOne({is_deleted: false, _id: dataAdd._id})
+        data = await Dataset.findOne({is_deleted: false, _id: dataAdd._id})
           .populate({ path: 'images' })
           .populate({ path: 'video' })
           .populate({ path: 'audio' })
@@ -40,7 +38,7 @@ export default {
       //   query.user_id = req.user._id
       // }
       if (req.query.limit && req.query.limit === '0') {
-        const totalQuery = await DataSet.paginate(query, { limit: 0 });
+        const totalQuery = await Dataset.paginate(query, { limit: 0 });
         req.query.limit = totalQuery.total;
       }
 
@@ -54,7 +52,7 @@ export default {
         { path: 'label_cate'}
       ];
 
-      let data = await DataSet.paginate(query, options);
+      let data = await Dataset.paginate(query, options);
       return res.json(data);
     } catch (e) {
       console.error(e);
@@ -65,7 +63,7 @@ export default {
   async findOne(req, res) {
     try {
       const { id } = req.params;
-      const data = await DataSet.findOne({ is_deleted: false, _id: id })
+      const data = await Dataset.findOne({ is_deleted: false, _id: id })
         .populate({ path: 'images' })
         .populate({ path: 'video' })
         .populate({ path: 'audio' })
@@ -96,7 +94,7 @@ export default {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      const data = await DataSet.findOneAndUpdate({ _id: id }, { is_deleted: true }, { new: true });
+      const data = await Dataset.findOneAndUpdate({ _id: id }, { is_deleted: true }, { new: true });
       if (!data) {
         responseAction.error(res, 404, '');
       }
@@ -116,7 +114,7 @@ export default {
       if (error && error.details) {
         responseAction.error(res, 400, error.details[0]);
       }
-      const data = await DataSet.findOneAndUpdate({ _id: id }, value, { new: true })
+      const data = await Dataset.findOneAndUpdate({ _id: id }, value, { new: true })
         .populate({ path: 'images' })
         .populate({ path: 'video' })
         .populate({ path: 'audio' })

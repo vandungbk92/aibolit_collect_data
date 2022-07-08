@@ -15,7 +15,7 @@ const ImageSchema = new Schema({
     enum: ['upload', 'capture'],
     default: 'upload'
   },
-  datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "DataSet"},
+  datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "Dataset"},
   dulieuId: {type: mongoose.Schema.Types.ObjectId, ref: "QuanlyDulieu"},
   labels: [{
     labelId:{type: mongoose.Schema.ObjectId, ref: 'Label'},
