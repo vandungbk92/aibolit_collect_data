@@ -8,7 +8,7 @@ const AudioSchema = new Schema({
   audio_desc: String,
   audio_uri: String,
   audio_path: String,
-  datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "DataSet"},
+  datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "Dataset"},
   dulieuId: {type: mongoose.Schema.Types.ObjectId, ref: "QuanlyDulieu"},
   is_deleted: { type: Boolean, default: false },
 }, {
