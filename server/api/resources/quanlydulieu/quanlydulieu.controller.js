@@ -28,7 +28,9 @@ export default {
         .populate('hinhanh')
         .populate('video')
         .populate('audio')
-        .populate({path: 'datasetId', select: 'dataset_name'}).execPopulate()
+        .populate({path: 'datasetId', select: 'dataset_name'})
+        .populate({path: 'nhanvien_id', select: 'full_name'})
+        .execPopulate()
 
       return res.json(data);
     } catch (e) {
