@@ -12,20 +12,9 @@ export default {
         responseAction.error(res, 400, error.details[0]);
       }
       const dataAdd = await Image.create(value);
-      let data;
 
-      if (dataAdd) {
-        data = await Image.findOne({ is_deleted: false, _id: dataAdd._id })
-          .populate({ path: 'datasetId' })
-          .populate({ path: 'labels.labelId' })
-          .lean();
-        let dataSetbyId = await DataSet.findOne({ is_deleted: false, _id: dataAdd.datasetId })
-          .lean();
-        const newImages = dataSetbyId.images ? dataSetbyId.images : [];
-        newImages.push(data?._id);
-
-        await DataSet.findOneAndUpdate({ _id: dataAdd.datasetId }, newImages, { new: true });
-      }
+      let data = await dataAdd.populate({ path: 'datasetId' })
+        .populate({ path: 'labels.labelId' }).execPopulate()
       return res.json(data);
     } catch (e) {
       console.error(e);
@@ -80,13 +69,6 @@ export default {
     try {
       const { id } = req.params;
       const data = await Image.findOneAndUpdate({ _id: id }, { is_deleted: true }, { new: true });
-      if (data) {
-        const dataSetbyId = await DataSet.findOne({ is_deleted: false, _id: data.datasetId });
-        const newImages = dataSetbyId.images ? dataSetbyId.images : [];
-        const indexImg = newImages.findIndex((img) => img._id === data._id);
-        newImages.split(indexImg, 1);
-        await DataSet.findOneAndUpdate({ _id: dataAdd.datasetId }, newImages, { new: true });
-      }
       if (!data) {
         responseAction.error(res, 404, '');
       }
