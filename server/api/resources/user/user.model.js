@@ -11,6 +11,7 @@ const userSchema = new Schema({
     gender: { type: String },
     phone: { type: String, required: true },
     is_deleted: { type: Boolean, default: false, select: false },
+    datasetId: {type: mongoose.Schema.Types.ObjectId, ref: "DataSet"},
     active: { type: Boolean, default: true },
   },
   {
