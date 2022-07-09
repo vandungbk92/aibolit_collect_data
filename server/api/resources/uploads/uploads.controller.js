@@ -10,25 +10,19 @@ export default {
     try {
       const {files} = req.files;
       let {type, datasetId} = req.body;
-      console.log(type,'type');
-      console.log(datasetId,'datasetId');
-
       if (!files || !files?.length || !type) {
         return res.status(404).send({success: false, message: 'Dữ liệu tải lên không hợp lệ!'});
       }
       let dataRtn
       if(type === 'image'){
         let dataImage = files?.map(data => {
-          console.log(data, 'dataImage');
-          let path = data?.path.split("\\");
+          let path = process.env.NODE_ENV === "development" ? data?.path.split("\\") : data?.path.split("/") ;
           let img_path = '';
           let idxStart = false
           path.forEach(curr => {
-            console.log(curr,'curr');
             if(curr === 'server') idxStart = true
             if(idxStart) img_path += '/' + curr
           });
-          console.log(img_path,'img_path');
           return {
             img_name: data?.filename,
             img_originalname : data?.originalname,
