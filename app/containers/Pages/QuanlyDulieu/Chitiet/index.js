@@ -323,7 +323,7 @@ class ChitietDulieu extends Component {
                   <div>
                     <b>Ảnh mới chụp</b>
                     <Row>
-                      {this.state.image.length > 0 ? this.state.image?.map((i, index) => (
+                      {this.state.image?.length > 0 ? this.state.image?.map((i, index) => (
                         <div key={index} style={{
                           display: 'flex',
                           marginLeft: 10,
@@ -354,7 +354,7 @@ class ChitietDulieu extends Component {
                   <div>
                     <b>Ảnh đã lưu</b>
                     <Row>
-                      {this.state.imageVideo.length > 0 ? this.state.imageVideo?.map((i, index) => {
+                      {this.state.imageVideo?.length > 0 ? this.state.imageVideo?.map((i, index) => {
                         const uriImg = API.FILE + '/file/' + dataRes.nhanvien_id._id + '---' + moment(dataRes.ngayupload).format('YYYY-MM-DD') + '---' + moment(dataRes.ngayupload).format('HH.mm.ss') +
                           '---' + i;
                         return (
