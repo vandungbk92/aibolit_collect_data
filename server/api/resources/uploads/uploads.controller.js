@@ -35,7 +35,7 @@ export default {
         dataRtn = await Image.create(dataImage)
       }else if(type === 'video'){
         let dataImage = files?.map(data => {
-          let path = data?.path.split("\\");
+          let path = process.env.NODE_ENV === "development" ? data?.path.split("\\") : data?.path.split("/") ;
           let img_path = '';
           let idxStart = false
           path.forEach(curr => {
@@ -54,7 +54,7 @@ export default {
         dataRtn = await Video.create(dataImage)
       }else if(type === 'audio'){
         let dataImage = files?.map(data => {
-          let path = data?.path.split("\\");
+          let path = process.env.NODE_ENV === "development" ? data?.path.split("\\") : data?.path.split("/") ;
           let img_path = '';
           let idxStart = false
           path.forEach(curr => {
