@@ -32,7 +32,7 @@ const config = {
   },
   development: {
     secret: 'AIBOLIT',
-    MONGO_URI: 'mongodb://thuthapdulieu:thuthapdulieu@118.70.156.51:4014/thuthapdulieu?authSource=thuthapdulieu',
+    MONGO_URI: 'mongodb://thuthapdulieu:thuthapdulieu@113.160.181.249:4014/thuthapdulieu?authSource=thuthapdulieu',
     port: 27017,
     "cos": {
       "credentials": {
